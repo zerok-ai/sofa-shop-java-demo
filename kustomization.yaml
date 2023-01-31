@@ -1,0 +1,7 @@
+commonLabels:
+  group: zerok-demoapp
+bases:
+  - ./frontend/k8s
+  - ./inventory/k8s
+  - ./order/k8s
+  - ./product/k8s
