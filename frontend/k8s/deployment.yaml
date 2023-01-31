@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-shop-deployment
+  labels:
+    app: demo-shop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-shop
+  template:
+    metadata:
+      labels:
+        app: demo-shop
+    spec:
+      containers:
+      - name: demo-shop-app
+        image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/frontend:0.0.1
+        ports:
+        - containerPort: 3000
