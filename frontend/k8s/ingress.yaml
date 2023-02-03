@@ -4,15 +4,14 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "gce"
     # ingress.gcp.kubernetes.io/pre-shared-cert: sofa-shop-certificate
-    kubernetes.io/ingress.allow-http: true
-    nginx.ingress.kubernetes.io/enable-cors: true
-    nginx.ingress.kubernetes.io/ssl-redirect: false
-    nginx.ingress.kubernetes.io/use-regex: true
+    kubernetes.io/ingress.allow-http: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
   name: demo-shop-ingress
-  namespace: default
 spec:
   rules:
-  - host: demo-shop.getanton.com
+  - host: zerok-demo-shop.getanton.com
     http:
       paths:
       - backend:
