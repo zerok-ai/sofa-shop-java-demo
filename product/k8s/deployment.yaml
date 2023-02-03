@@ -19,3 +19,39 @@ spec:
           image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/product:latest
           ports:
             - containerPort: 8080
+          env: # Setting Enviornmental Variables
+            - name: DB_HOST   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configmap
+                  key: host
+
+            - name: PRODUCT_DB_NAME  # Setting PRODUCT Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configmap
+                  key: productDbName
+
+            - name: ORDER_DB_NAME  # Setting ORDER Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configmap
+                  key: orderDbName
+
+            - name: INVENTORY_DB_NAME  # Setting INVENTORY Database name from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: app-configmap
+                  key: inventoryDbName
+
+            - name: DB_USERNAME  # Setting Database username from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: username
+
+            - name: DB_PASSWORD # Setting Database password from Secret
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: password
