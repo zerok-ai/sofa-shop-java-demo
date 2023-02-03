@@ -24,10 +24,8 @@ import static java.util.stream.Collectors.joining;
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
 
-    private final String getAllProductEndpoint = "/api/product";
-
     @Value("${product.host}")
-    private final String productHost;
+    private String productHost;
 
     @Transactional(readOnly = true)
     public boolean isInStock(String skuCode, String quantity) {
@@ -35,8 +33,8 @@ public class InventoryService {
         if (quantity != null && !quantity.trim().equals("")) {
             qty = Integer.parseInt(quantity);
         }
-        Inventory inventory = inventoryRepository.findBySkuCode(skuCode).orElse(null);
-        return inventory != null && inventory.getCurrentInventory() >= qty;
+        List<Inventory> inventory = inventoryRepository.findBySkuCode(skuCode).orElse(null);
+        return inventory != null && inventory.get(0).getCurrentInventory() >= qty;
     }
 
 
@@ -82,6 +80,7 @@ public class InventoryService {
 
     private ProductList getProductDetailsForSkuCodes() {
 
+        String getAllProductEndpoint = "/api/product";
         String url = getUrl(productHost, getAllProductEndpoint);
 
         Map<String, String> requestParams = new HashMap<>();
@@ -133,11 +132,12 @@ public class InventoryService {
             throw new IllegalArgumentException("quantity should be more than 0");
         }
 
-        Inventory inventory = inventoryRepository.findBySkuCode(request.getSku()).orElse(null);
+        List<Inventory> inventory = inventoryRepository.findBySkuCode(request.getSku()).orElse(null);
 
         if (inventory != null) {
-            inventory.setCurrentInventory(inventory.getCurrentInventory() + request.getCurrentInventory());
-            inventoryRepository.save(inventory);
+            Inventory inv = inventory.get(0);
+            inv.setCurrentInventory(inv.getCurrentInventory() + request.getCurrentInventory());
+            inventoryRepository.save(inv);
         } else {
             throw new IllegalArgumentException("inventory does not exist");
         }

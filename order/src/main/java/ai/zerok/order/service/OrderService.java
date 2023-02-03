@@ -39,6 +39,9 @@ public class OrderService {
     private final String productEndpoint = "/api/product";
     private final String inventoryEndpoint = "/api/inventory";
 
+    @Value("${inventory.host}")
+    private String inventoryHost;
+
     @Value("${product.host}")
     private String productHost;
 
@@ -77,7 +80,7 @@ public class OrderService {
         for (OrderLineItem orderLineItem: orderLineItemList) {
 //            String url = "http://inventory.default.svc.cluster.local/api/inventory";
 //            String url = "http://localhost:8081/api/inventory";
-            String url = getUrl(productHost, inventoryEndpoint);
+            String url = getUrl(inventoryHost, inventoryEndpoint);
 
 
             HttpClient client = new HttpClient();
@@ -119,12 +122,15 @@ public class OrderService {
             requestParams.put("quantity", orderLineItem.getQuantity().toString());
 //            String url = "http://inventory.default.svc.cluster.local/api/inventory?";
 //            String url = "http://localhost:8081/api/inventory?";
-            String url = getUrl(productHost, inventoryEndpoint);
+            String url = getUrl(inventoryHost, inventoryEndpoint);
+            url+="?";
 
 
             String encodedURL = requestParams.keySet().stream()
                     .map(key -> key + "=" + encodeValue(requestParams.get(key)))
                     .collect(joining("&", url, ""));
+            System.err.println(encodedURL);
+            System.err.println("---------------------------------------------------------------");
 
             HttpClient client = new HttpClient();
 
@@ -137,7 +143,9 @@ public class OrderService {
                     System.err.println("Method failed: " + method.getStatusLine());
                 }
                 byte[] responseBody = method.getResponseBody();
-                boolean response = Boolean.parseBoolean(new String(responseBody, StandardCharsets.UTF_8));
+                String resp = new String(responseBody, StandardCharsets.UTF_8);
+                System.err.println(resp);
+                boolean response = Boolean.parseBoolean(resp);
                 if(!response) {
                     throw new IllegalArgumentException("item not in stock");
                 }
