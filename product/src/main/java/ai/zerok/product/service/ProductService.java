@@ -1,15 +1,12 @@
-package ai.zerok.sofademo.service;
+package ai.zerok.product.service;
 
-import ai.zerok.sofademo.dto.ProductRequest;
-import ai.zerok.sofademo.dto.ProductResponse;
-import ai.zerok.sofademo.model.Product;
-import ai.zerok.sofademo.repository.ProductRepository;
+import ai.zerok.product.dto.ProductRequest;
+import ai.zerok.product.model.Product;
+import ai.zerok.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

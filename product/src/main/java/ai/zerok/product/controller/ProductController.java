@@ -1,9 +1,9 @@
-package ai.zerok.sofademo.controller;
+package ai.zerok.product.controller;
 
-import ai.zerok.sofademo.dto.ProductRequest;
-import ai.zerok.sofademo.dto.ProductRequestArr;
-import ai.zerok.sofademo.model.Product;
-import ai.zerok.sofademo.service.ProductService;
+import ai.zerok.product.dto.ProductRequest;
+import ai.zerok.product.dto.ProductRequestArr;
+import ai.zerok.product.model.Product;
+import ai.zerok.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

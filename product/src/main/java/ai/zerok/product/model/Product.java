@@ -1,4 +1,4 @@
-package ai.zerok.sofademo.model;
+package ai.zerok.product.model;
 
 import jakarta.persistence.*;
 import lombok.*;
