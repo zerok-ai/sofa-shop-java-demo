@@ -2,8 +2,8 @@ apiVersion: v1
 data:
   host: mysql-svc.mysql.svc.cluster.local:3306
   dbName: orderservice
-  productServiceURL: product.1.svc.cluster.local
-  inventoryServiceURL: inventory.1.svc.cluster.local
+  productServiceURL: product.zerok-demoapp.svc.cluster.local
+  inventoryServiceURL: inventory.zerok-demoapp.svc.cluster.local
 kind: ConfigMap
 metadata:
   creationTimestamp: "2023-02-02T11:51:25Z"
