@@ -4,4 +4,4 @@ metadata:
   name: sofa-shop-certificate
 spec:
   domains:
-    - demo-shop.getanton.com
+    - zerok-demo-shop.getanton.com
