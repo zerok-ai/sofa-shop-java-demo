@@ -1,4 +1,4 @@
-package ai.zerok.sofademo.dto;
+package ai.zerok.product.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

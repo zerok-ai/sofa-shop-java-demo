@@ -1,6 +1,6 @@
-package ai.zerok.sofademo.repository;
+package ai.zerok.product.repository;
 
-import ai.zerok.sofademo.model.Product;
+import ai.zerok.product.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

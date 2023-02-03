@@ -1,11 +1,10 @@
-package ai.zerok.sofademo.dto;
+package ai.zerok.product.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 
 @Data
