@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -101,15 +102,23 @@ public class InventoryService {
             if (statusCode != HttpStatus.SC_OK) {
                 System.err.println("Method failed: " + method.getStatusLine());
             }
-            byte[] responseBody = method.getResponseBody();
+            InputStream in = method.getResponseBodyAsStream();
 
-            if(responseBody == null) {
+            int numRead = -1;
+            byte[] buf = new byte[4 * 1024];
+
+            String responseBody = "";
+
+            while ((numRead = in.read(buf)) != -1) {
+                String str = new String(buf, 0, numRead);
+                responseBody = responseBody + str;
+            }
+            if(responseBody.equals("")) {
                 throw new IllegalArgumentException("error in fetching product details");
             }
-            String response = new String(responseBody, StandardCharsets.UTF_8);
 
             ObjectMapper objectMapper = new ObjectMapper();
-            Product[] productRequestArr = objectMapper.readValue(response, Product[].class);
+            Product[] productRequestArr = objectMapper.readValue(responseBody, Product[].class);
             productRequestList.setProductList(Arrays.asList(productRequestArr));
 
 

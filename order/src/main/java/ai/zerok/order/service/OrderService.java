@@ -37,6 +37,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     private final String productEndpoint = "/api/product";
+    private final String productPriceEndpoint = "/api/product/price";
     private final String inventoryEndpoint = "/api/inventory";
 
     @Value("${inventory.host}")
@@ -45,7 +46,6 @@ public class OrderService {
     @Value("${product.host}")
     private String productHost;
 
-//    private final WebClient webClient;
 
     private String getUrl(String host, String endPoint) {
         return "http://" + host + endPoint;
@@ -68,7 +68,7 @@ public class OrderService {
         order.setStatus("PLACED");
         Order savedOrder = orderRepository.save(order);
         try {
-            updateInventory(order.getOrderLineItemList());
+            updateInventory(order.getOrderLineItemList(), false);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -76,7 +76,37 @@ public class OrderService {
         return savedOrder.getOrderNumber();
     }
 
-    private void updateInventory(List<OrderLineItem> orderLineItemList) throws JsonProcessingException {
+    public String cancelOrder(String orderId) {
+
+        Order order = orderRepository.findById(Long.parseLong(orderId)).orElse(null);
+        if (order != null) {
+            if (order.getStatus().equals("CANCELLED")) {
+                throw new IllegalArgumentException(String.format("Order: %s already deleted", orderId));
+            }
+            order.setStatus("CANCELLED");
+            orderRepository.save(order);
+
+            try {
+                updateInventory(order.getOrderLineItemList(), true);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+//            List<Boolean> booleans = order.getOrderLineItemList().stream().map(orderLineItem ->
+//                    webClient.put()
+//                            .uri(url)
+//                            .body(BodyInserters.fromValue(getBodyMap(orderLineItem, true)))
+//                            .retrieve()
+//                            .bodyToMono(Boolean.class)
+//                            .block()
+//            ).toList();
+
+            return String.format("Order: %s cancelled successfully", orderId);
+        }
+        throw new IllegalArgumentException(String.format("Order: %s not found", orderId));
+    }
+
+    private void updateInventory(List<OrderLineItem> orderLineItemList, boolean add) throws JsonProcessingException {
         for (OrderLineItem orderLineItem: orderLineItemList) {
 //            String url = "http://inventory.default.svc.cluster.local/api/inventory";
 //            String url = "http://localhost:8081/api/inventory";
@@ -86,8 +116,9 @@ public class OrderService {
             HttpClient client = new HttpClient();
 
             PutMethod method = new PutMethod(url);
+            int qtyToUpdate = add? orderLineItem.getQuantity(): -orderLineItem.getQuantity();
 
-            InventoryRequest request = new InventoryRequest(orderLineItem.getId(), orderLineItem.getSkuCode(), -orderLineItem.getQuantity(), orderLineItem.getPrice());
+            InventoryRequest request = new InventoryRequest(orderLineItem.getId(), orderLineItem.getSkuCode(), qtyToUpdate, orderLineItem.getPrice());
 
             String s = new ObjectMapper().writeValueAsString(request);
             method.setRequestBody(s);
@@ -170,12 +201,15 @@ public class OrderService {
             requestParams.put("price", orderLineItem.getPrice().toString());
 //            String url = "http://product.default.svc.cluster.local/api/product/price?";
 //            String url = "http://localhost:8080/api/product/price?";
-            String url = getUrl(productHost, productEndpoint);
+            String url = getUrl(productHost, productPriceEndpoint);
+            url += "?";
+
 
 
             String encodedURL = requestParams.keySet().stream()
                     .map(key -> key + "=" + encodeValue(requestParams.get(key)))
                     .collect(joining("&", url, ""));
+            System.err.println(encodedURL);
 
             HttpClient client = new HttpClient();
 
@@ -188,7 +222,10 @@ public class OrderService {
                     System.err.println("Method failed: " + method.getStatusLine());
                 }
                 byte[] responseBody = method.getResponseBody();
-                boolean response = Boolean.parseBoolean(new String(responseBody, StandardCharsets.UTF_8));
+
+                System.err.println(encodedURL);
+                String res = new String(responseBody, StandardCharsets.UTF_8);
+                boolean response = Boolean.parseBoolean(res);
                 if(!response) {
                     throw new IllegalArgumentException("item price do not match");
                 }
@@ -222,28 +259,6 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public String cancelOrder(String orderId) {
-
-        Order order = orderRepository.findById(Long.parseLong(orderId)).orElse(null);
-        if (order != null) {
-            order.setStatus("CANCELLED");
-            orderRepository.save(order);
-
-            String url = "http://inventory.test-namespace.svc.cluster.local/api/inventory";
-
-//            List<Boolean> booleans = order.getOrderLineItemsList().stream().map(orderLineItem ->
-//                    webClient.put()
-//                            .uri(url)
-//                            .body(BodyInserters.fromValue(getBodyMap(orderLineItem, true)))
-//                            .retrieve()
-//                            .bodyToMono(Boolean.class)
-//                            .block()
-//            ).toList();
-
-            return String.format("Order: %s cancelled successfully", orderId);
-        }
-        throw new IllegalArgumentException(String.format("Order: %s not found", orderId));
-    }
 
     private Map<String, String> getBodyMap(OrderLineItem orderLineItem, boolean addQuantity) {
         Map<String, String> bodyMap = new HashMap();

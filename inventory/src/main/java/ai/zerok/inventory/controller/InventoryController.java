@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class InventoryController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public void updateQuantity(@RequestHeader Map<String, String> allHeaders, @RequestBody InventoryRequest inventoryRequest){
+    public void updateQuantity(@RequestBody InventoryRequest inventoryRequest){
         inventoryService.updateQuantity(inventoryRequest);
     }
 
