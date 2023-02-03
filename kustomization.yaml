@@ -1,5 +1,8 @@
 commonLabels:
   group: zerok-demoapp
+resources:
+  - ./k8s/ingress.yaml
+  - ./k8s/managedCertificate.yaml
 bases:
   - ./frontend/k8s
   - ./inventory/k8s

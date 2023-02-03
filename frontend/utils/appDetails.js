@@ -1,5 +1,5 @@
 export default {
     title: 'Holy Sit',
-    hostname: 'vaibhav-test.getanton.com',
+    hostname: 'zerok-demo-shop.getanton.com',
     http_scheme: 'http://',
 };
