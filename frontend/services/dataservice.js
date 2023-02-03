@@ -3,12 +3,8 @@ import axios from "axios";
 
 export async function getProducts() {
     return new Promise(async (resolve, reject) => {
-        try {
-            const response = await axios.get(appDetails.http_scheme+appDetails.hostname+'/api/inventory/all');            
-            resolve(response.data);
-        } catch (error) {
-            console.log(error);            
-        }
+        const response = await axios.get(appDetails.http_scheme+appDetails.hostname+'/api/inventory/all');
+        resolve(response.data);
     });
 }
 
@@ -24,11 +20,7 @@ export async function placeOrder(cart) {
     })
     console.log(orderItem);
     return new Promise(async (resolve, reject) => {
-        try {
-            const response = await axios.post(appDetails.http_scheme+appDetails.hostname+'/api/order', orderItem);
-            resolve(response.data);
-        } catch (error) {
-            console.log(error);
-        }
+        const response = await axios.post(appDetails.http_scheme+appDetails.hostname+'/api/order', orderItem);
+        resolve(response.data);
     })
 }

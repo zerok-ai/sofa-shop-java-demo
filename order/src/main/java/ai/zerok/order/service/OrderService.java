@@ -10,26 +10,22 @@ import ai.zerok.order.repository.OrderRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.apache.commons.httpclient.methods.PutMethod;
-
-
-import java.io.IOException;
-import java.net.URLEncoder;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PutMethod;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
-
 
 import static java.util.stream.Collectors.joining;
 
@@ -40,7 +36,17 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
+    private final String productEndpoint = "/api/product";
+    private final String inventoryEndpoint = "/api/inventory";
+
+    @Value("${product.host}")
+    private String productHost;
+
 //    private final WebClient webClient;
+
+    private String getUrl(String host, String endPoint) {
+        return "http://" + host + endPoint;
+    }
 
     public String placeOrder(OrderRequest orderRequest) {
         Order order = new Order();
@@ -69,8 +75,10 @@ public class OrderService {
 
     private void updateInventory(List<OrderLineItem> orderLineItemList) throws JsonProcessingException {
         for (OrderLineItem orderLineItem: orderLineItemList) {
-            String url = "http://inventory.default.svc.cluster.local/api/inventory";
+//            String url = "http://inventory.default.svc.cluster.local/api/inventory";
 //            String url = "http://localhost:8081/api/inventory";
+            String url = getUrl(productHost, inventoryEndpoint);
+
 
             HttpClient client = new HttpClient();
 
@@ -109,8 +117,10 @@ public class OrderService {
             Map<String, String> requestParams = new HashMap<>();
             requestParams.put("skuCode", orderLineItem.getSkuCode());
             requestParams.put("quantity", orderLineItem.getQuantity().toString());
-            String url = "http://inventory.default.svc.cluster.local/api/inventory?";
+//            String url = "http://inventory.default.svc.cluster.local/api/inventory?";
 //            String url = "http://localhost:8081/api/inventory?";
+            String url = getUrl(productHost, inventoryEndpoint);
+
 
             String encodedURL = requestParams.keySet().stream()
                     .map(key -> key + "=" + encodeValue(requestParams.get(key)))
@@ -150,8 +160,10 @@ public class OrderService {
             Map<String, String> requestParams = new HashMap<>();
             requestParams.put("skuCode", orderLineItem.getSkuCode());
             requestParams.put("price", orderLineItem.getPrice().toString());
-            String url = "http://product.default.svc.cluster.local/api/product/price?";
+//            String url = "http://product.default.svc.cluster.local/api/product/price?";
 //            String url = "http://localhost:8080/api/product/price?";
+            String url = getUrl(productHost, productEndpoint);
+
 
             String encodedURL = requestParams.keySet().stream()
                     .map(key -> key + "=" + encodeValue(requestParams.get(key)))

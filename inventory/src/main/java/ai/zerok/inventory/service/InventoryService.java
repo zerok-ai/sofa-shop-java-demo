@@ -8,6 +8,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,11 @@ import static java.util.stream.Collectors.joining;
 @RequiredArgsConstructor
 public class InventoryService {
     private final InventoryRepository inventoryRepository;
+
+    private final String getAllProductEndpoint = "/api/product";
+
+    @Value("${product.host}")
+    private final String productHost;
 
     @Transactional(readOnly = true)
     public boolean isInStock(String skuCode, String quantity) {
@@ -69,10 +75,14 @@ public class InventoryService {
         return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
+
+    private String getUrl(String host, String endPoint) {
+        return "http://" + host + endPoint;
+    }
+
     private ProductList getProductDetailsForSkuCodes() {
 
-        String url = "http://product.default.svc.cluster.local/api/product";
-//        String url = "http://localhost:8080/api/product";
+        String url = getUrl(productHost, getAllProductEndpoint);
 
         Map<String, String> requestParams = new HashMap<>();
 //        requestParams.put("skuCodes", skuCodes);

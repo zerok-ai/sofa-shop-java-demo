@@ -10,7 +10,7 @@ function Ecommerce({ Component, pageProps, categories }) {
   )
 }
 
-Ecommerce.getServerSideProps = async () => {
+Ecommerce.getInitialProps = async () => {
   const categories = await fetchCategories()
   return {
     categories

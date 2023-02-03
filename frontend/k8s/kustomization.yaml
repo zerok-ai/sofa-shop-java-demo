@@ -4,3 +4,5 @@ namespace: zerok-demoapp
 resources:
   - service.yaml
   - deployment.yaml
+  - ingress.yaml
+  - managedCertificate.yaml

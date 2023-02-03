@@ -1,10 +1,11 @@
 apiVersion: v1
 data:
   host: mysql-svc.mysql.svc.cluster.local:3306
-  dbName: productservice
+  dbName: inventoryservice
+  productServiceURL: product.${NAMESPACE}.svc.cluster.local
 kind: ConfigMap
 metadata:
   creationTimestamp: "2023-02-02T11:51:25Z"
-  name: product-product-app-configmap
+  name: inventory-app-configmap
   resourceVersion: "114321"
   uid: 1fc8cc82-8738-48a8-9b47-3ab1d5ca4108
