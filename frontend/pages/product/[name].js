@@ -72,8 +72,8 @@ const ItemView = (props) => {
 }
 
 export async function getStaticPaths () {
-  // const inventory = await fetchInventory()
-  const inventory = await getProducts()
+  const inventory = await fetchInventory()
+  // const inventory = await getProducts()
   const paths = inventory.map(item => {
     return { params: { name: slugify(item.name) }}
   })
@@ -85,8 +85,8 @@ export async function getStaticPaths () {
 
 export async function getStaticProps ({ params }) {
   const name = params.name.replace(/-/g," ")
-  const inventory = await getProducts()
-  // const inventory = await fetchInventory()
+  // const inventory = await getProducts()
+  const inventory = await fetchInventory()
   const product = inventory.find(item => slugify(item.name) === slugify(name))
 
   return {

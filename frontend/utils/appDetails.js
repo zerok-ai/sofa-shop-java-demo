@@ -1,5 +1,5 @@
 export default {
     title: 'Holy Sit',
-    hostname: process.env.EXTERNAL_HOSTNAME || 'localhost',
+    hostname: 'demo01-shop.getanton.com',
     http_scheme: 'http://',
 };

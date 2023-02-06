@@ -1,4 +1,5 @@
 import appDetails from "../utils/appDetails";
+import mapping from "../utils/mapping";
 import axios from "axios";
 
 export async function getProducts() {
@@ -12,12 +13,16 @@ export async function getProducts() {
     });
 }
 
+function getSKU(itemName) {
+    return mapping[itemName];
+}
+
 export async function placeOrder(cart) {
     let orderItem = {};
     orderItem.orderLineItemDtoList = cart.map((cartItem, index) => {
         return {
             "id": index,
-            "skuCode": cartItem.sku,
+            "skuCode": getSKU(cartItem.name),
             "price": cartItem.price,
             "quantity": cartItem.quantity
         };
@@ -25,8 +30,9 @@ export async function placeOrder(cart) {
     console.log(orderItem);
     return new Promise(async (resolve, reject) => {
         try {
-            const response = await axios.post(appDetails.http_scheme+appDetails.hostname+'/api/order', orderItem);
-            resolve(response.data);
+            const hostname = process.env.EXTERNAL_HOSTNAME || appDetails.hostname;
+            const response = await axios.post(appDetails.http_scheme+hostname+'/api/order', orderItem);
+            resolve(response.data);     
         } catch (error) {
             console.log(error);
         }

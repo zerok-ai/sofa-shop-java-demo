@@ -102,8 +102,8 @@ const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
 }
 
 export async function getStaticProps() {
-  const inventory = await getProducts()
-  // const inventory = await fetchInventory()
+  // const inventory = await getProducts()
+  const inventory = await fetchInventory()
   
   const inventoryCategorized = inventory.reduce((acc, next) => {
     const categories = next.categories

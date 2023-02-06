@@ -17,8 +17,8 @@ class ViewInventory extends React.Component {
     this.fetchInventory()
   }
   fetchInventory = async() => {
-    const inventory = await getProducts();
-    // const inventory = await fetchInventory()
+    // const inventory = await getProducts();
+    const inventory = await fetchInventory()
     this.setState({ inventory })
   }
   editItem = (item, index) => {
