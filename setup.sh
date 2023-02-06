@@ -16,10 +16,14 @@ EXTERNAL_HOSTNAME="${3:-$DEFAULT_EXTERNAL_HOSTNAME}"
 if [[ "$COMMAND" == "$APPLY_COMMAND" ]]
 then
     kubectl create namespace $NAMESPACE
-    kubectl $COMMAND -n $NAMESPACE -k ${scriptDir}/
     sed -e "s/\${NAMESPACE}/$NAMESPACE/" ${scriptDir}/order/k8s/app-configmap_template.yaml > ${scriptDir}/order/k8s/app-configmap.yaml
     sed -e "s/\${NAMESPACE}/$NAMESPACE/" ${scriptDir}/inventory/k8s/app-configmap_template.yaml > ${scriptDir}/inventory/k8s/app-configmap.yaml
+
     sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/frontend/k8s/app-configmap-template.yaml > ${scriptDir}/frontend/k8s/app-configmap.yaml
+    sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/k8s/ingress-template.yaml > ${scriptDir}/k8s/ingress.yaml
+    sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/k8s/managedCertificate-template.yaml > ${scriptDir}/k8s/managedCertificate.yaml
+
+    kubectl $COMMAND -n $NAMESPACE -k ${scriptDir}/
 
     ips=($(kubectl get services -n ingress-nginx --no-headers --field-selector metadata.name=ingress-nginx-controller | awk '{print $4}'))
     gcp_dns_project=black-scope-358204

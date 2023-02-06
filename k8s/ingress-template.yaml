@@ -11,7 +11,7 @@ metadata:
   name: demo-shop-ingress
 spec:
   rules:
-  - host: zerok-demo-shop.getanton.com
+  - host: ${EXTERNAL_HOSTNAME}
     http:
       paths:
       - backend:

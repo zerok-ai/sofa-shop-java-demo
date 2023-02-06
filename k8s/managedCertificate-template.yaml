@@ -4,4 +4,4 @@ metadata:
   name: sofa-shop-certificate
 spec:
   domains:
-    - zerok-demo-shop.getanton.com
+    - ${EXTERNAL_HOSTNAME}
