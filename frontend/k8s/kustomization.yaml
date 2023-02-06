@@ -4,3 +4,4 @@ namespace: zerok-demoapp
 resources:
   - service.yaml
   - deployment.yaml
+  - app-configmap.yaml

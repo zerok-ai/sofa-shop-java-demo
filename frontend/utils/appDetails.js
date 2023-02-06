@@ -1,5 +1,5 @@
 export default {
     title: 'Holy Sit',
-    hostname: 'zerok-demo-shop.getanton.com',
+    hostname: process.env.EXTERNAL_HOSTNAME || 'localhost',
     http_scheme: 'http://',
 };
