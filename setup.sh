@@ -6,10 +6,12 @@
 scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 
 DEFAULT_NAMESPACE='zerok-demoapp'
+DEFAULT_EXTERNAL_HOSTNAME='demo-shop.getanton.com'
 APPLY_COMMAND='apply'
 DELETE_COMMAND='delete'
 COMMAND="${1:-$APPLY_COMMAND}"
 NAMESPACE="${2:-$DEFAULT_NAMESPACE}"
+EXTERNAL_HOSTNAME="${3:-$DEFAULT_EXTERNAL_HOSTNAME}"
 
 if [[ "$COMMAND" == "$APPLY_COMMAND" ]]
 then
@@ -17,6 +19,20 @@ then
     kubectl $COMMAND -n $NAMESPACE -k ${scriptDir}/
     sed -e "s/\${NAMESPACE}/$NAMESPACE/" ${scriptDir}/order/k8s/app-configmap_template.yaml > ${scriptDir}/order/k8s/app-configmap.yaml
     sed -e "s/\${NAMESPACE}/$NAMESPACE/" ${scriptDir}/inventory/k8s/app-configmap_template.yaml > ${scriptDir}/inventory/k8s/app-configmap.yaml
+    sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/frontend/k8s/app-configmap-template.yaml > ${scriptDir}/frontend/k8s/app-configmap.yaml
+
+    ips=($(kubectl get services -n ingress-nginx --no-headers --field-selector metadata.name=ingress-nginx-controller | awk '{print $4}'))
+    gcp_dns_project=black-scope-358204
+    domain=$EXTERNAL_HOSTNAME
+    extip=$ips
+
+    domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="anton" --type="A" --format=yaml`
+
+    if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
+       gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
+    else
+       gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
+    fi
 
 elif [[ "$COMMAND" == "$DELETE_COMMAND"  ]]
 then 
