@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: frontend-app-configmap
-data:
-  EXTERNAL_HOSTNAME: ${EXTERNAL_HOSTNAME}

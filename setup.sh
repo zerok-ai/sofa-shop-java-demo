@@ -5,8 +5,8 @@
 ### 
 scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 
-DEFAULT_NAMESPACE='zerok-demoapp'
-DEFAULT_EXTERNAL_HOSTNAME='demo-shop.getanton.com'
+DEFAULT_NAMESPACE='sofa-shop'
+DEFAULT_EXTERNAL_HOSTNAME='sofa-shop-eu.getanton.com'
 APPLY_COMMAND='apply'
 DELETE_COMMAND='delete'
 COMMAND="${1:-$APPLY_COMMAND}"
@@ -20,6 +20,7 @@ then
     sed -e "s/\${NAMESPACE}/$NAMESPACE/" ${scriptDir}/inventory/k8s/app-configmap_template.yaml > ${scriptDir}/inventory/k8s/app-configmap.yaml
 
     sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/frontend/k8s/app-configmap-template.yaml > ${scriptDir}/frontend/k8s/app-configmap.yaml
+    sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/frontend/k8s/deployment-template.yaml > ${scriptDir}/frontend/k8s/deployment.yaml
     sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/k8s/ingress-template.yaml > ${scriptDir}/k8s/ingress.yaml
     sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/k8s/managedCertificate-template.yaml > ${scriptDir}/k8s/managedCertificate.yaml
 

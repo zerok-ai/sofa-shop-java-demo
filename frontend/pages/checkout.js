@@ -5,7 +5,7 @@ import DENOMINATION from "../utils/currencyProvider"
 import { FaLongArrowAltLeft } from "react-icons/fa"
 import Link from "next/link"
 import Image from "../components/Image"
-import { v4 as uuid } from "uuid"
+import { toast } from 'react-toastify'
 
 import {
   CardElement,
@@ -118,10 +118,18 @@ const Checkout = ({ context }) => {
     // TODO call API
 
 
-    const response = await placeOrder(cart);
-
-    setOrderCompleted(true)
-    clearCart()
+    // const response = await placeOrder(cart);
+    placeOrder(cart).then((response) => {
+      setOrderCompleted(true);
+      clearCart();
+    }).catch((err) => {
+      toast.error(''+err, {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 7000,
+        draggable: false,
+        closeOnClick: false,
+      })
+    })
   }
 
 
