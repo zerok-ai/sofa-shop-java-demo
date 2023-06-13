@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: demo-shop-app
-        image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/frontend:0.0.1
+        image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/frontend:${EXTERNAL_HOSTNAME}
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

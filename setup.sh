@@ -6,12 +6,12 @@
 scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 
 DEFAULT_NAMESPACE='sofa-shop'
-DEFAULT_EXTERNAL_HOSTNAME='sofa-shop-eu.getanton.com'
+DEFAULT_EXTERNAL_HOSTNAME='sofa-shop-fr.getanton.com'
 APPLY_COMMAND='apply'
 DELETE_COMMAND='delete'
-COMMAND="${1:-$APPLY_COMMAND}"
-NAMESPACE="${2:-$DEFAULT_NAMESPACE}"
-EXTERNAL_HOSTNAME="${3:-$DEFAULT_EXTERNAL_HOSTNAME}"
+EXTERNAL_HOSTNAME="${1:-$DEFAULT_EXTERNAL_HOSTNAME}"
+COMMAND="${2:-$APPLY_COMMAND}"
+NAMESPACE="${3:-$DEFAULT_NAMESPACE}"
 
 if [[ "$COMMAND" == "$APPLY_COMMAND" ]]
 then
@@ -19,8 +19,6 @@ then
     sed -e "s/\${NAMESPACE}/$NAMESPACE/" ${scriptDir}/order/k8s/app-configmap_template.yaml > ${scriptDir}/order/k8s/app-configmap.yaml
     sed -e "s/\${NAMESPACE}/$NAMESPACE/" ${scriptDir}/inventory/k8s/app-configmap_template.yaml > ${scriptDir}/inventory/k8s/app-configmap.yaml
 
-    sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/frontend/k8s/app-configmap-template.yaml > ${scriptDir}/frontend/k8s/app-configmap.yaml
-    sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/frontend/k8s/deployment-template.yaml > ${scriptDir}/frontend/k8s/deployment.yaml
     sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/k8s/ingress-template.yaml > ${scriptDir}/k8s/ingress.yaml
     sed -e "s/\${EXTERNAL_HOSTNAME}/$EXTERNAL_HOSTNAME/" ${scriptDir}/k8s/managedCertificate-template.yaml > ${scriptDir}/k8s/managedCertificate.yaml
 
