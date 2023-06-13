@@ -1,0 +1,42 @@
+# kubernetes yaml to create a namespace called external.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external
+  labels:
+    name: external
+
+---
+# kubernetes yaml to create a deployment called loadrunner in the external namespace.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadrun-deployment
+  namespace: external
+  labels:
+    app: loadrun
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loadrun
+  template:
+    metadata:
+      labels:
+        app: loadrun
+    spec:
+      containers:
+      - name: curl
+        image:  alpine/curl
+        # Just spin & wait forever
+        command: [ "sh", "-c", "--" ]
+        # args: [ "while true; do sleep 0.5; curl -IL http://service1.default.svc.cluster.local/api -s | egrep -e zerok -e HTTP | xargs; done;" ]
+        args: [ "while true; do sleep 30; curl -ss -w '\n%{http_code} ' http://inventory.sofa-shop.svc.cluster.local/api/inventory/all; done;" ]
+        resources: 
+          limits:
+            cpu: "2"
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 40Mi
