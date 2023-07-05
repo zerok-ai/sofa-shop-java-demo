@@ -1,6 +1,6 @@
 apiVersion: v1
 data:
-  host: mysql-svc.mysql.svc.cluster.local:3306
+  host: postgres-postgresql.postgres.svc.cluster.local:5432
   dbName: productservice
 kind: ConfigMap
 metadata:

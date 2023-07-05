@@ -43,12 +43,21 @@ public class ProductService {
     }
 
     public boolean checkPrice(String skuCode, String price) {
-        Product product = productRepository.findBySku(skuCode).orElse(null);
+        System.out.println("DEBUG01 product checkPrice called skuCode " + skuCode);
+        Product product = null;
+        try {
+            product = productRepository.findBySku(skuCode).orElse(null);
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
         if (product == null) {
+            System.out.println("DEBUG01 product not present");
             return false;
         } else if(product.getPrice() == Integer.parseInt(price)) {
+            System.out.println("DEBUG01 product sku " + product.getSku() + " price " + product.getPrice());
             return true;
         }
+        System.out.println("DEBUG01 product price do not match");
         return false;
     }
 }

@@ -1,7 +1,7 @@
 export DB_HOST=localhost:3306
-export DB_NAME=product-app-configmap
-export DB_USERNAME=root
-export DB_PASSWORD=
+export DB_NAME=orderservice
+export DB_USERNAME=postgres
+export DB_PASSWORD=aSbkTm3DiB
 
 export ZK_OTEL_EXTENSION_PATH=../../zk-otel-extension
 
