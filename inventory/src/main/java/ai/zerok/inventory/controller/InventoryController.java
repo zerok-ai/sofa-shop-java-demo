@@ -25,8 +25,7 @@ public class InventoryController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<InventoryDetailsResponse> getAllInventory(@RequestHeader("traceparent") String traceParent){
-        System.out.println("@AVIN_DEBUG_ get all inventory called with traceParent " + traceParent);
+    public List<InventoryDetailsResponse> getAllInventory(){
         return inventoryService.getAll();
     }
 

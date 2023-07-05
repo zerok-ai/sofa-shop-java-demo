@@ -25,8 +25,7 @@ public class ProductController {
 
     @PostMapping("/all")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createProduct(@RequestBody ProductRequestArr productRequests, @RequestHeader("traceparent") String traceParent) {
-        System.out.println("@AVIN_DEBUG_ get all product called with traceParent " + traceParent);
+    public void createProduct(@RequestBody ProductRequestArr productRequests) {
         for(ProductRequest p: productRequests.getProductRequestList()){
             productService.createProduct(p);
         }
