@@ -6,10 +6,8 @@
 scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 source $scriptDir/variables.sh
 
-EXTERNAL_HOSTNAME=$DEFAULT_EXTERNAL_HOSTNAME
 COMMAND=$APPLY_COMMAND
 MODE=$MODE_POSTGRES
-NAMESPACE="$DEFAULT_NAMESPACE-$MODE"
 
 while getopts "e:c:n:m:" opt; do
   case $opt in
@@ -32,6 +30,17 @@ while getopts "e:c:n:m:" opt; do
   esac
 done
 
+if [[ -z "$NAMESPACE" ]]; then
+  NAMESPACE="$DEFAULT_NAMESPACE-$MODE"
+fi
+
+if [[ -z "$EXTERNAL_HOSTNAME" ]]; then
+  echo "Here MODE=$MODE"
+  CLUSTER_NAME=$(kubectl config current-context | awk -F '_' '{print $4}')
+  EXTERNAL_HOSTNAME="sofa-shop.$MODE.$CLUSTER_NAME.getanton.com"
+fi
+
+NAMESPACE="$DEFAULT_NAMESPACE-$MODE"
 export EXTERNAL_HOSTNAME=$EXTERNAL_HOSTNAME
 export COMMAND=$COMMAND
 export MODE=$MODE
@@ -63,6 +72,7 @@ else
 fi
 
 
+echo "DEFAULT_EXTERNAL_HOSTNAME=$DEFAULT_EXTERNAL_HOSTNAME"
 echo "scriptDir=$scriptDir"
 echo "EXTERNAL_HOSTNAME=$EXTERNAL_HOSTNAME"
 echo "COMMAND=$COMMAND"
@@ -95,6 +105,10 @@ then
     #Order Setup
     envsubst < ${scriptDir}/order/k8s/app-configmap_template.yaml > ${scriptDir}/order/k8s/app-configmap.yaml
     envsubst < ${scriptDir}/order/k8s/db-secrets_template.yaml > ${scriptDir}/order/k8s/db-secrets.yaml
+
+    #Product Setup
+    envsubst < ${scriptDir}/product/k8s/app-configmap_template.yaml > ${scriptDir}/product/k8s/app-configmap.yaml
+    envsubst < ${scriptDir}/product/k8s/db-secrets_template.yaml > ${scriptDir}/product/k8s/db-secrets.yaml
 
     #k8s
     envsubst < ${scriptDir}/k8s/ingress-template.yaml > ${scriptDir}/k8s/ingress.yaml

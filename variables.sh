@@ -10,7 +10,8 @@
 export DB_PRINT_SQL=false
 
 export DEFAULT_NAMESPACE='sofa-shop'
-export DEFAULT_EXTERNAL_HOSTNAME='sofa-shop.ps.getanton.com'
+random_string=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
+export DEFAULT_EXTERNAL_HOSTNAME="sofa-shop.mysql.$random_string.getanton.com"
 export APPLY_COMMAND='apply'
 export DELETE_COMMAND='delete'
 export MODE_MYSQL='mysql'
