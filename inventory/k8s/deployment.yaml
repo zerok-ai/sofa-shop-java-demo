@@ -16,11 +16,41 @@ spec:
     spec:
       containers:
         - name: inventory
-          image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/inventory:postgres
+          image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/inventory:configurable
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables
+            - name: DB_URL_PARAMS   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: inventory-app-configmap
+                  key: db_url_params
+
+            - name: DB_DRIVER_TYPE   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: inventory-app-configmap
+                  key: db_driver_type
+
+            - name: DB_HIBERNATE_DIALECT   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: inventory-app-configmap
+                  key: db_hibernate_dialect
+
+            - name: DB_PRINT_SQL   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: inventory-app-configmap
+                  key: db_print_sql
+
+            - name: DB_DRIVER_CLASS   # Setting Database host address from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: inventory-app-configmap
+                  key: db_driver_class
+
             - name: DB_HOST   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
@@ -42,12 +72,12 @@ spec:
             - name: DB_USERNAME  # Setting Database username from Secret
               valueFrom:
                 secretKeyRef:
-                  name: inventory-mysql-secrets
+                  name: inventory-db-secrets
                   key: username
 
             - name: DB_PASSWORD # Setting Database password from Secret
               valueFrom:
                 secretKeyRef:
-                  name: inventory-mysql-secrets
+                  name: inventory-db-secrets
                   key: password
 

@@ -20,7 +20,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="categories",columnDefinition="varchar(255)[]")
     private List<String> categories;
 
     private String name;

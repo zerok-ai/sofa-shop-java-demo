@@ -6,11 +6,10 @@ data:
   db_print_sql: "${DB_PRINT_SQL}"
   db_driver_class: ${DB_DRIVER_CLASS}
   host: ${DB_HOST}
-  dbName: inventoryservice
-  productServiceURL: product.${NAMESPACE}.svc.cluster.local
+  dbName: productservice
 kind: ConfigMap
 metadata:
   creationTimestamp: "2023-02-02T11:51:25Z"
-  name: inventory-app-configmap
+  name: product-app-configmap
   resourceVersion: "114321"
   uid: 1fc8cc82-8738-48a8-9b47-3ab1d5ca4108

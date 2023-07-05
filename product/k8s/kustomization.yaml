@@ -4,4 +4,4 @@ resources:
   - service.yaml
   - deployment.yaml
   - app-configmap.yaml
-  - mysql-secrets.yaml
+  - db-secrets.yaml

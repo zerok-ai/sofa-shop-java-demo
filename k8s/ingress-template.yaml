@@ -2,7 +2,6 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     # ingress.gcp.kubernetes.io/pre-shared-cert: sofa-shop-certificate
     kubernetes.io/ingress.allow-http: "true"
     nginx.ingress.kubernetes.io/enable-cors: "true"
