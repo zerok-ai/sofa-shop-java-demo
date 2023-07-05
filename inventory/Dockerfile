@@ -1,4 +1,4 @@
-FROM amd64/openjdk:17-jdk-slim
+FROM --platform=linux/amd64 amd64/openjdk:17-jdk-slim
 WORKDIR /usr/src/app
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} app.jar

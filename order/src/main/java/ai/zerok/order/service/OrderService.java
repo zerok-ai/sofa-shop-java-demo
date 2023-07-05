@@ -1,6 +1,7 @@
 package ai.zerok.order.service;
 
 
+import ai.zerok.order.OutOfStockException;
 import ai.zerok.order.dto.InventoryRequest;
 import ai.zerok.order.dto.OrderLineItemDto;
 import ai.zerok.order.dto.OrderRequest;
@@ -179,6 +180,7 @@ public class OrderService {
                 boolean response = Boolean.parseBoolean(resp);
                 if(!response) {
                     throw new IllegalArgumentException("item not in stock");
+//                    throw new OutOfStockException();
                 }
 
             } catch (HttpException e) {
