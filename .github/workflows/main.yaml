@@ -24,7 +24,6 @@ env:
   DOCKER_REG: ${{ vars.DOCKER_REG }}
   PROJECT_ID:  ${{ vars.PROJECT_ID }}
   DOCKER_REPO:  ${{ vars.DOCKER_REPO }}
-#  APP_NAME:  ${{ vars.APP_NAME }}
   APP_NAME: ${{ github.event.inputs.APP_NAME }}
   GOPRIVATE : ${{ vars.GOPRIVATE }}
   TOKEN: ${{ secrets.GITPAT }}
