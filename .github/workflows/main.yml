@@ -42,13 +42,13 @@ jobs:
         with:
           java-version: '17'
           distribution: 'zulu'
-          maven-version: '3.8.1'
-      - name: Set up Maven
-        run: mvn wrapper --quiet
+          cache: maven
+#      - name: Set up Maven
+#        run: mvn wrapper --quiet
 
       - name: Build Inventory
         working-directory: ./inventory
-        run: ./mvnw clean install
+        run: mvn clean install
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
