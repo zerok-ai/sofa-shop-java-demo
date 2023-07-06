@@ -39,11 +39,11 @@ jobs:
       - name: Configure git for private modules
         run: git config --global url."https://$TOKEN:x-oauth-basic@github.com/".insteadOf "https://github.com/"
       - name: Set up JDK
-          uses: actions/setup-java@v2
-          with:
-            java-version: '18' # Specify the desired JDK version
+        uses: actions/setup-java@v2
+        with:
+          java-version: '18'
       - name: Set up Maven
-          run: mvn wrapper --quiet
+        run: mvn wrapper --quiet
 
       - name: Build Inventory
         working-directory: ./inventory
