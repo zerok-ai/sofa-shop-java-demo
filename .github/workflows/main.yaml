@@ -10,6 +10,10 @@ on:
         description: 'Sofa shop mode (mysql or ps)'
         required: true
         default: 'ps'
+      APP_NAME:
+        description: 'App name to be built'
+        required: true
+        default: 'inventory'
 env:
   GOOS: ${{ vars.GOOS }}
   ENV: ${{ github.event.inputs.ENV }}
@@ -20,7 +24,8 @@ env:
   DOCKER_REG: ${{ vars.DOCKER_REG }}
   PROJECT_ID:  ${{ vars.PROJECT_ID }}
   DOCKER_REPO:  ${{ vars.DOCKER_REPO }}
-  APP_NAME:  ${{ vars.APP_NAME }}
+#  APP_NAME:  ${{ vars.APP_NAME }}
+  APP_NAME: ${{ github.event.inputs.APP_NAME }}
   GOPRIVATE : ${{ vars.GOPRIVATE }}
   TOKEN: ${{ secrets.GITPAT }}
 
@@ -41,7 +46,8 @@ jobs:
           run: mvn wrapper --quiet
 
       - name: Build Inventory
-        run: cd inventory && ./mvnw clean install && cd ..
+        working-directory: ./inventory
+        run: ./mvnw clean install
 
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
