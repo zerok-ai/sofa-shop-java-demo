@@ -40,7 +40,8 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v2
         with:
-          java-version: '18'
+          java-version: '17'
+          distribution: 'zulu'
       - name: Set up Maven
         run: mvn wrapper --quiet
 
