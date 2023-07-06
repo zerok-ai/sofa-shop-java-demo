@@ -70,9 +70,11 @@ jobs:
           gcloud auth configure-docker $DOCKER_REG --quiet
 
       - name: Docker build
+        working-directory: ./inventory
         run: |-
           docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/$APP_NAME:$GITHUB_SHA" .
 
       - name: Docker push
+        working-directory: ./inventory
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/$APP_NAME:$GITHUB_SHA"
