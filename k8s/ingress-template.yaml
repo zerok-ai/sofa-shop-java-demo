@@ -10,6 +10,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
   name: demo-shop-ingress
 spec:
+  ingressClassName: nginx
   rules:
   - host: ${EXTERNAL_HOSTNAME}
     http:

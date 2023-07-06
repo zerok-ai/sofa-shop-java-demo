@@ -20,6 +20,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name="categories",columnDefinition="varchar(255)[]")
     private List<String> categories;
 
     private String name;
@@ -28,8 +29,7 @@ public class Product {
 
     private String image;
 
-    @Lob
-    @Column(name="description",columnDefinition="LONGTEXT")
+    @Column(name="description",columnDefinition="TEXT")
     private String description;
     private String brand;
 

@@ -2,7 +2,7 @@ LOCATION="us-west1"
 PROJECT_ID="zerok-dev"
 REPOSITORY="java-spring-boot-demo"
 IMAGE="product"
-TAG="latest"
+TAG="postgres"
 ART_Repo_URI="$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG"
 
 docker build -t $IMAGE .

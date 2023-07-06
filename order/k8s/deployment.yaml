@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
         - name: order
-          image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/order:latest
+          image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/order:postgres
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables

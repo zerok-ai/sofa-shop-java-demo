@@ -16,7 +16,8 @@ spec:
     spec:
       containers:
         - name: inventory
-          image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/inventory:latest
+          image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/inventory:postgres
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables
