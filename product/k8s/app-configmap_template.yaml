@@ -6,8 +6,7 @@ data:
   db_print_sql: "${DB_PRINT_SQL}"
   db_driver_class: ${DB_DRIVER_CLASS}
   host: ${DB_HOST}
-  dbName: inventoryservice
-  productServiceURL: product.${NAMESPACE}.svc.cluster.local
+  dbName: productservice
 kind: ConfigMap
 metadata:
-  name: inventory-app-configmap
+  name: product-app-configmap

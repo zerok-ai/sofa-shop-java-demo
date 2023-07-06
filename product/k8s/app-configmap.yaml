@@ -1,10 +1,12 @@
 apiVersion: v1
 data:
+  db_url_params: ""
+  db_driver_type: postgresql
+  db_hibernate_dialect: org.hibernate.dialect.PostgreSQLDialect
+  db_print_sql: "false"
+  db_driver_class: org.postgresql.Driver
   host: postgres-postgresql.postgres.svc.cluster.local:5432
   dbName: productservice
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2023-02-02T11:51:25Z"
   name: product-app-configmap
-  resourceVersion: "114321"
-  uid: 1fc8cc82-8738-48a8-9b47-3ab1d5ca4108

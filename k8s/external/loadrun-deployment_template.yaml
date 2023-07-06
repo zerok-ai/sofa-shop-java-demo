@@ -1,0 +1,40 @@
+# kubernetes yaml to create a namespace called external.
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-${MODE}
+  labels:
+    name: external-${MODE}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: loadrun-deployment
+  namespace: external-${MODE}
+  labels:
+    app: loadrun
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: loadrun
+  template:
+    metadata:
+      labels:
+        app: loadrun
+    spec:
+      containers:
+      - name: curl
+        image:  alpine/curl
+        # Just spin & wait forever
+        command: [ "sh", "-c", "--" ]
+        args: [ "while true; do sleep 30; curl -ss -H 'traceparent: 00-aaaaaaaa'$(tr -dc 'A-F0-9' < /dev/urandom | head -c24)'-'$(tr -dc 'A-F0-9' < /dev/urandom | head -c16)'-01' -w '\n%{http_code} ' http://inventory.$NAMESPACE.svc.cluster.local/api/inventory/all; done;" ]
+        resources: 
+          limits:
+            cpu: "2"
+            memory: 1Gi
+          requests:
+            cpu: 10m
+            memory: 40Mi
