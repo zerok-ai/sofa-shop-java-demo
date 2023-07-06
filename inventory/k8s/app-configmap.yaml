@@ -10,7 +10,4 @@ data:
   productServiceURL: product.sofa-shop-ps.svc.cluster.local
 kind: ConfigMap
 metadata:
-  creationTimestamp: "2023-02-02T11:51:25Z"
   name: inventory-app-configmap
-  resourceVersion: "114321"
-  uid: 1fc8cc82-8738-48a8-9b47-3ab1d5ca4108

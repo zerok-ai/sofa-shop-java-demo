@@ -10,10 +10,8 @@ scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 parent_dir=$(dirname "$scriptDir")
 source $parent_dir/variables.sh
 
-EXTERNAL_HOSTNAME=$DEFAULT_EXTERNAL_HOSTNAME
 COMMAND=$APPLY_COMMAND
 MODE=$MODE_POSTGRES
-NAMESPACE="$DEFAULT_NAMESPACE-$MODE"
 
 while getopts "e:c:n:m:" opt; do
   case $opt in
@@ -35,6 +33,16 @@ while getopts "e:c:n:m:" opt; do
       ;;
   esac
 done
+
+if [[ -z "$NAMESPACE" ]]; then
+  NAMESPACE="$DEFAULT_NAMESPACE-$MODE"
+fi
+
+if [[ -z "$EXTERNAL_HOSTNAME" ]]; then
+  echo "Here MODE=$MODE"
+  CLUSTER_NAME=$(kubectl config current-context | awk -F '_' '{print $4}')
+  EXTERNAL_HOSTNAME="sofa-shop.$MODE.$CLUSTER_NAME.getanton.com"
+fi
 
 export EXTERNAL_HOSTNAME=$EXTERNAL_HOSTNAME
 export COMMAND=$COMMAND
@@ -86,12 +94,15 @@ echo "DB_USERNAME: $DB_USERNAME"
 echo "DB_PASSWORD: $DB_PASSWORD"
 echo "DB_URL_PARAMS: $DB_URL_PARAMS"
 echo "PRODUCT_HOST: $PRODUCT_HOST"
+echo "INVENTORY_HOST: $INVENTORY_HOST"
+
+echo "scriptDir=$scriptDir; DB_NAME=$DB_NAME; EXTERNAL_HOSTNAME=$EXTERNAL_HOSTNAME; COMMAND=$COMMAND; NAMESPACE=$NAMESPACE; MODE=$MODE; DB_DRIVER_TYPE=$DB_DRIVER_TYPE; DB_DRIVER_CLASS=$DB_DRIVER_CLASS; DB_PRINT_SQL=$DB_PRINT_SQL; DB_URL_PARAMS=$DB_URL_PARAMS; DB_HIBERNATE_DIALECT=$DB_HIBERNATE_DIALECT; DB_HOST=$DB_HOST; DB_USERNAME=$DB_USERNAME; DB_PASSWORD=$DB_PASSWORD; DB_URL_PARAMS=$DB_URL_PARAMS; PRODUCT_HOST=$PRODUCT_HOST;"
 
 export ZK_OTEL_EXTENSION_PATH=../../zk-otel-extension
 
-#java -javaagent:$ZK_OTEL_EXTENSION_PATH/opentelemetry-javaagent.jar \
-#  -Dotel.javaagent.extensions=$ZK_OTEL_EXTENSION_PATH/build/libs/zk-otel-extension-1.0-all.jar \
-#  -Dotel.traces.exporter=zerok \
-#  -jar target/order-0.0.1-SNAPSHOT.jar
+java -javaagent:$ZK_OTEL_EXTENSION_PATH/opentelemetry-javaagent.jar \
+  -Dotel.javaagent.extensions=$ZK_OTEL_EXTENSION_PATH/build/libs/zk-otel-extension-1.0-all.jar \
+  -Dotel.traces.exporter=zerok \
+  -jar target/order-0.0.1-SNAPSHOT.jar
 
-java -jar target/order-0.0.1-SNAPSHOT.jar
+#java -jar target/order-0.0.1-SNAPSHOT.jar

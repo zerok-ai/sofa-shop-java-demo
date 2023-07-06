@@ -40,7 +40,6 @@ if [[ -z "$EXTERNAL_HOSTNAME" ]]; then
   EXTERNAL_HOSTNAME="sofa-shop.$MODE.$CLUSTER_NAME.getanton.com"
 fi
 
-NAMESPACE="$DEFAULT_NAMESPACE-$MODE"
 export EXTERNAL_HOSTNAME=$EXTERNAL_HOSTNAME
 export COMMAND=$COMMAND
 export MODE=$MODE
@@ -111,13 +110,14 @@ then
     envsubst < ${scriptDir}/product/k8s/db-secrets_template.yaml > ${scriptDir}/product/k8s/db-secrets.yaml
 
     #Loadrun
-    envsubst < ${scriptDir}/k8s/loadrun-deployment_template.yaml > ${scriptDir}/k8s/loadrun-deployment.yaml
+    envsubst < ${scriptDir}/k8s/external/loadrun-deployment_template.yaml > ${scriptDir}/k8s/external/loadrun-deployment.yaml
 
     #k8s
     envsubst < ${scriptDir}/k8s/ingress-template.yaml > ${scriptDir}/k8s/ingress.yaml
     envsubst < ${scriptDir}/k8s/managedCertificate-template.yaml > ${scriptDir}/k8s/managedCertificate.yaml
 
     kubectl $COMMAND -n $NAMESPACE -k ${scriptDir}/
+    kubectl $COMMAND -k ${scriptDir}/k8s/external/
 
     ips=($(kubectl get services -n ingress-nginx --no-headers --field-selector metadata.name=ingress-nginx-controller | awk '{print $4}'))
     gcp_dns_project=black-scope-358204
