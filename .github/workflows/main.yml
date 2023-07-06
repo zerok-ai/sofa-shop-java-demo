@@ -25,7 +25,7 @@ env:
   PROJECT_ID:  ${{ vars.PROJECT_ID }}
   DOCKER_REPO:  ${{ vars.DOCKER_REPO }}
   APP_NAME: ${{ github.event.inputs.APP_NAME }}
-  GOPRIVATE : ${{ vars.GOPRIVATE }}
+  GOPRIVATE: ${{ vars.GOPRIVATE }}
   TOKEN: ${{ secrets.GITPAT }}
 
 jobs:
@@ -64,7 +64,7 @@ jobs:
 
       - name: Docker build
         run: |-
-          docker build  --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/$APP_NAME:$GITHUB_SHA" .
+          docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/$APP_NAME:$GITHUB_SHA" .
 
       - name: Docker push
         run: |-
