@@ -5,15 +5,25 @@ on:
       ENV:
         description: 'ENV'
         required: true
-        default: 'poc'
+        default: 'psql01'
+        options:
+          psql01: 'psql01'
+          poc: 'poc'
       MODE:
         description: 'Sofa shop mode (mysql or ps)'
         required: true
         default: 'ps'
+        options:
+          ps: 'ps'
+          mysql: 'mysql'
       APP_NAME:
         description: 'App name to be built'
         required: true
         default: 'inventory'
+        options:
+          inventory: 'inventory'
+          order: 'order'
+          product: 'product'
 env:
   GOOS: ${{ vars.GOOS }}
   ENV: ${{ github.event.inputs.ENV }}
