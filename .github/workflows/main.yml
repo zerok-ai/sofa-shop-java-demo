@@ -17,13 +17,20 @@ on:
           ps: 'ps'
           mysql: 'mysql'
       APP_NAME:
-        description: 'App name to be built'
+        type: choice
         required: true
-        default: 'inventory'
+        description: 'App name to be built'
         options:
-          inventory: 'inventory'
-          order: 'order'
-          product: 'product'
+          - inventory
+          - order
+          - product
+#        description: 'App name to be built'
+#        required: true
+#        default: 'inventory'
+#        options:
+#          inventory: 'inventory'
+#          order: 'order'
+#          product: 'product'
 env:
   GOOS: ${{ vars.GOOS }}
   ENV: ${{ github.event.inputs.ENV }}
