@@ -97,8 +97,7 @@ echo "PRODUCT_HOST: $PRODUCT_HOST"
 echo "scriptDir=$scriptDir; DB_NAME=$DB_NAME; EXTERNAL_HOSTNAME=$EXTERNAL_HOSTNAME; COMMAND=$COMMAND; NAMESPACE=$NAMESPACE; MODE=$MODE; DB_DRIVER_TYPE=$DB_DRIVER_TYPE; DB_DRIVER_CLASS=$DB_DRIVER_CLASS; DB_PRINT_SQL=$DB_PRINT_SQL; DB_URL_PARAMS=$DB_URL_PARAMS; DB_HIBERNATE_DIALECT=$DB_HIBERNATE_DIALECT; DB_HOST=$DB_HOST; DB_USERNAME=$DB_USERNAME; DB_PASSWORD=$DB_PASSWORD; DB_URL_PARAMS=$DB_URL_PARAMS; PRODUCT_HOST=$PRODUCT_HOST;"
 
 export ZK_OTEL_EXTENSION_PATH=../../zk-otel-extension
-
-java -javaagent:$ZK_OTEL_EXTENSION_PATH/opentelemetry-javaagent.jar \
+java -javaagent:$ZK_OTEL_EXTENSION_PATH/build/libs/opentelemetry-javaagent.jar \
   -Dotel.javaagent.extensions=$ZK_OTEL_EXTENSION_PATH/build/libs/zk-otel-extension-1.0-all.jar \
   -Dotel.traces.exporter=zerok \
   -jar target/inventory-0.0.1-SNAPSHOT.jar
