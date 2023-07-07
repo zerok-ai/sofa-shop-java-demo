@@ -35,7 +35,7 @@ public class InventoryService {
             qty = Integer.parseInt(quantity);
         }
         List<Inventory> inventory = inventoryRepository.findBySkuCode(skuCode).orElse(null);
-        return inventory != null && inventory.get(0).getCurrentInventory() >= qty;
+        return inventory != null && inventory.size() > 0 && inventory.get(0).getCurrentInventory() >= qty;
     }
 
 
