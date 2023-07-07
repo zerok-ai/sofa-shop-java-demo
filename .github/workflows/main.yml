@@ -1,15 +1,12 @@
 name: build_publish_deploy
 on:
   workflow_dispatch:
+    #https://stackoverflow.com/a/69920265
     inputs:
       ENV:
         type: environment
         description: 'Environment'
         required: true
-#        default: 'psql01'
-#        options:
-#          psql01: 'psql01'
-#          poc: 'poc'
       MODE:
         type: choice
         description: 'Sofa shop mode (mysql or ps)'
@@ -82,10 +79,12 @@ jobs:
 
       - name: Docker build
         working-directory: ./inventory
+        if: ${{ env.APP_NAME == 'inventory' }}
         run: |-
           docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/$APP_NAME:$GITHUB_SHA" .
 
       - name: Docker push
         working-directory: ./inventory
+        if: ${{ env.APP_NAME == 'inventory' }}
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/$APP_NAME:$GITHUB_SHA"
