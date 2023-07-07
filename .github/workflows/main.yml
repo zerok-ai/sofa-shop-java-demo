@@ -3,19 +3,20 @@ on:
   workflow_dispatch:
     inputs:
       ENV:
-        description: 'ENV'
+        type: environment
+        description: 'Environment'
         required: true
-        default: 'psql01'
-        options:
-          psql01: 'psql01'
-          poc: 'poc'
+#        default: 'psql01'
+#        options:
+#          psql01: 'psql01'
+#          poc: 'poc'
       MODE:
+        type: choice
         description: 'Sofa shop mode (mysql or ps)'
         required: true
-        default: 'ps'
         options:
-          ps: 'ps'
-          mysql: 'mysql'
+          - ps
+          - mysql
       APP_NAME:
         type: choice
         required: true
@@ -24,13 +25,6 @@ on:
           - inventory
           - order
           - product
-#        description: 'App name to be built'
-#        required: true
-#        default: 'inventory'
-#        options:
-#          inventory: 'inventory'
-#          order: 'order'
-#          product: 'product'
 env:
   GOOS: ${{ vars.GOOS }}
   ENV: ${{ github.event.inputs.ENV }}
