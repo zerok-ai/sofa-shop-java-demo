@@ -91,55 +91,56 @@ jobs:
       ## Inventory Build and Push
       - name: Build Inventory
         working-directory: ./inventory
-        if: ${{ contains(['inventory', 'all'], env.APP_NAME) }}
+#        if: ${{ contains(['inventory', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'inventory' || 'all' }}
         run: mvn clean install
 
       - name: Docker build Inventory
         working-directory: ./inventory
 #        if: ${{ env.APP_NAME == 'inventory' }}
-        if: ${{ contains(['inventory', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'inventory' || 'all' }}
         run: |-
           docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$GITHUB_SHA" .
 
       - name: Docker push Inventory
         working-directory: ./inventory
-        if: ${{ contains(['inventory', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'inventory' || 'all' }}
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$GITHUB_SHA"
 
       ## Product Build and Push
       - name: Build Product
         working-directory: ./product
-        if: ${{ contains(['product', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'product' || 'all' }}
         run: mvn clean install
 
       - name: Docker build Product
         working-directory: ./product
-        if: ${{ contains(['product', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'product' || 'all' }}
         run: |-
           docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA" .
 
       - name: Docker push Product
         working-directory: ./product
-        if: ${{ contains(['product', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'product' || 'all' }}
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA"
 
       ## Order Build and Push
       - name: Build Order
         working-directory: ./order
-        if: ${{ contains(['order', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'order' || 'all' }}
         run: mvn clean install
 
       - name: Docker build Order
         working-directory: ./order
-        if: ${{ contains(['order', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'order' || 'all' }}
         run: |-
           docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA" .
 
       - name: Docker push Order
         working-directory: ./order
-        if: ${{ contains(['order', 'all'], env.APP_NAME) }}
+        if: ${{ env.APP_NAME == 'order' || 'all' }}
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA"
 
