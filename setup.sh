@@ -145,21 +145,21 @@ then
     envsubst < ${scriptDir}/k8s/ingress-template.yaml > ${scriptDir}/k8s/ingress.yaml
     envsubst < ${scriptDir}/k8s/managedCertificate-template.yaml > ${scriptDir}/k8s/managedCertificate.yaml
 
-    kubectl $COMMAND -n $NAMESPACE -k ${scriptDir}/
-    kubectl $COMMAND -k ${scriptDir}/k8s/external/
-
-    ips=($(kubectl get services -n ingress-nginx --no-headers --field-selector metadata.name=ingress-nginx-controller | awk '{print $4}'))
-    gcp_dns_project=black-scope-358204
-    domain=$EXTERNAL_HOSTNAME
-    extip=$ips
-
-    domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="anton" --type="A" --format=yaml`
-
-    if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
-       gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
-    else
-       gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
-    fi
+#    kubectl $COMMAND -n $NAMESPACE -k ${scriptDir}/
+#    kubectl $COMMAND -k ${scriptDir}/k8s/external/
+#
+#    ips=($(kubectl get services -n ingress-nginx --no-headers --field-selector metadata.name=ingress-nginx-controller | awk '{print $4}'))
+#    gcp_dns_project=black-scope-358204
+#    domain=$EXTERNAL_HOSTNAME
+#    extip=$ips
+#
+#    domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="anton" --type="A" --format=yaml`
+#
+#    if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
+#       gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
+#    else
+#       gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
+#    fi
 
 elif [[ "$COMMAND" == "$DELETE_COMMAND"  ]]
 then
