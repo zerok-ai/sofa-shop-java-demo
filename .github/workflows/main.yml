@@ -22,19 +22,28 @@ on:
           - inventory
           - order
           - product
+          - all
+      DEPLOY:
+        type: boolean
+        description: Do you want to deploy this as well?
 env:
   GOOS: ${{ vars.GOOS }}
   ENV: ${{ github.event.inputs.ENV }}
   MODE: ${{ github.event.inputs.MODE }}
+  DEPLOY: ${{ github.event.inputs.DEPLOY }}
   GOARCH: ${{ vars.GOARCH }}
   CGO_ENABLED: ${{ vars.CGO_ENABLED }}
   GKE_SA_KEY: ${{ secrets.GKE_SA_KEY }}
   DOCKER_REG: ${{ vars.DOCKER_REG }}
   PROJECT_ID:  ${{ vars.PROJECT_ID }}
   DOCKER_REPO:  ${{ vars.DOCKER_REPO }}
+  GKE_CLUSTER:  ${{ vars.GKE_CLUSTER }}
+  GKE_ZONE : ${{ vars.GKE_ZONE }}
   APP_NAME: ${{ github.event.inputs.APP_NAME }}
   GOPRIVATE: ${{ vars.GOPRIVATE }}
   TOKEN: ${{ secrets.GITPAT }}
+  DB_USERNAME: ${{ secrets.DB_USERNAME_BASE64 }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD_BASE64 }}
 
 jobs:
   build:
@@ -59,10 +68,6 @@ jobs:
 #      - name: Set up Maven
 #        run: mvn wrapper --quiet
 
-      - name: Build Inventory
-        working-directory: ./inventory
-        run: mvn clean install
-
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v0'
@@ -77,14 +82,69 @@ jobs:
         run: |
           gcloud auth configure-docker $DOCKER_REG --quiet
 
-      - name: Docker build
-        working-directory: ./inventory
-        if: ${{ env.APP_NAME == 'inventory' }}
-        run: |-
-          docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/$APP_NAME:$GITHUB_SHA" .
+      - id: 'get-credentials'
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          cluster_name: '${{ env.GKE_CLUSTER }}'
+          location: '${{ env.GKE_ZONE }}'
 
-      - name: Docker push
+      ## Inventory Build and Push
+      - name: Build Inventory
         working-directory: ./inventory
-        if: ${{ env.APP_NAME == 'inventory' }}
+        if: ${{ contains(['inventory', 'all'], env.APP_NAME) }}
+        run: mvn clean install
+
+      - name: Docker build Inventory
+        working-directory: ./inventory
+#        if: ${{ env.APP_NAME == 'inventory' }}
+        if: ${{ contains(['inventory', 'all'], env.APP_NAME) }}
         run: |-
-          docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/$APP_NAME:$GITHUB_SHA"
+          docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$GITHUB_SHA" .
+
+      - name: Docker push Inventory
+        working-directory: ./inventory
+        if: ${{ contains(['inventory', 'all'], env.APP_NAME) }}
+        run: |-
+          docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$GITHUB_SHA"
+
+      ## Product Build and Push
+      - name: Build Product
+        working-directory: ./product
+        if: ${{ contains(['product', 'all'], env.APP_NAME) }}
+        run: mvn clean install
+
+      - name: Docker build Product
+        working-directory: ./product
+        if: ${{ contains(['product', 'all'], env.APP_NAME) }}
+        run: |-
+          docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA" .
+
+      - name: Docker push Product
+        working-directory: ./product
+        if: ${{ contains(['product', 'all'], env.APP_NAME) }}
+        run: |-
+          docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA"
+
+      ## Order Build and Push
+      - name: Build Order
+        working-directory: ./order
+        if: ${{ contains(['order', 'all'], env.APP_NAME) }}
+        run: mvn clean install
+
+      - name: Docker build Order
+        working-directory: ./order
+        if: ${{ contains(['order', 'all'], env.APP_NAME) }}
+        run: |-
+          docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA" .
+
+      - name: Docker push Order
+        working-directory: ./order
+        if: ${{ contains(['order', 'all'], env.APP_NAME) }}
+        run: |-
+          docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA"
+
+      ## All Deploy
+      - name: Deploy All
+        working-directory: ./
+        if: ${{ env.DEPLOY == 'true' }}
+        run: MODE=$MODE DB_PASSWORD=$DB_PASSWORD DB_USERNAME=$DB_USERNAME ./setup.sh

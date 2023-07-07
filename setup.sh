@@ -7,7 +7,6 @@ scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 source $scriptDir/variables.sh
 
 COMMAND=$APPLY_COMMAND
-MODE=$MODE_POSTGRES
 
 show_help() {
   echo "Usage: ./setup.sh [options]"
@@ -52,6 +51,10 @@ if [[ -z "$NAMESPACE" ]]; then
   NAMESPACE="$DEFAULT_NAMESPACE-$MODE"
 fi
 
+if [[ -z "$MODE" ]]; then
+  MODE="$MODE_POSTGRES"
+fi
+
 if [[ -z "$EXTERNAL_HOSTNAME" ]]; then
   echo "Here MODE=$MODE"
   CLUSTER_NAME=$(kubectl config current-context | awk -F '_' '{print $4}')
@@ -70,8 +73,12 @@ if [[ "$MODE" == "$MODE_MYSQL" ]]; then
   export DB_URL_PARAMS="$MYSQL_URL_PARAMS"
   export DB_HIBERNATE_DIALECT="$MYSQL_DRIVER_DIALECT"
   export DB_HOST="$MYSQL_HOST"
-  export DB_USERNAME="$MYSQL_USERNAME_SECRET"
-  export DB_PASSWORD="$MYSQL_PASSWORD_SECRET"
+  if [[ -z "$DB_USERNAME" ]]; then
+    export DB_USERNAME="$MYSQL_USERNAME_SECRET"
+  fi
+  if [[ -z "$DB_PASSWORD" ]]; then
+    export DB_PASSWORD="$MYSQL_PASSWORD_SECRET"
+  fi
   export DB_URL_PARAMS="$MYSQL_URL_PARAMS"
 elif [[ "$MODE" == "$MODE_POSTGRES" ]]; then
   export DB_DRIVER_TYPE="$PS_DRIVER_TYPE"
@@ -80,8 +87,12 @@ elif [[ "$MODE" == "$MODE_POSTGRES" ]]; then
   export DB_URL_PARAMS="$PS_URL_PARAMS"
   export DB_HIBERNATE_DIALECT="$PS_DRIVER_DIALECT"
   export DB_HOST="$PS_HOST"
-  export DB_USERNAME="$PS_USERNAME_SECRET"
-  export DB_PASSWORD="$PS_PASSWORD_SECRET"
+  if [[ -z "$DB_USERNAME" ]]; then
+    export DB_USERNAME="$PS_USERNAME_SECRET"
+  fi
+  if [[ -z "$DB_PASSWORD" ]]; then
+    export DB_PASSWORD="$PS_PASSWORD_SECRET"
+  fi
   export DB_URL_PARAMS="$PS_URL_PARAMS"
 else
   echo "Invalid MODE specified."

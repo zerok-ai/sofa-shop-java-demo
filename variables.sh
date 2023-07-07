@@ -27,7 +27,7 @@ export MYSQL_HOST=mysql-svc.mysql.svc.cluster.local:3306
 export MYSQL_HOST_LOCAL=localhost:3306
 
 export PS_USERNAME_SECRET=cG9zdGdyZXM=
-export PS_PASSWORD_SECRET=YVNia1RtM0RpQg==
+export PS_PASSWORD_SECRET=UHkzd2p6NXdJUw==
 export PS_DRIVER_DIALECT=org.hibernate.dialect.PostgreSQLDialect
 export PS_DRIVER_CLASS=org.postgresql.Driver
 export PS_DRIVER_TYPE=postgresql
