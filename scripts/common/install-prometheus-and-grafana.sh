@@ -18,7 +18,7 @@ kubectl apply -f $setupfolder/common/yaml/cluster/monitoring-ingress.yaml
 kubectl apply -f $setupfolder/common/yaml/cluster/prom-ingress.yaml
 
 # Load previously saved grafana dashboard
-$setupfolder/common/install-grafana-dashboard.sh app
+$setupfolder/common/install-grafana-dashboard.sh sofa-shop
 
 # install Promtail
 # helm upgrade --install promtail grafana/promtail -f $setupfolder/common/yaml/values/promtail-values.yaml -n monitoring

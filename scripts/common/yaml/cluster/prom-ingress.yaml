@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
-  - host: prom.avinpx07.getanton.com
+  - host: prom.loadclient01.getanton.com
     http:
       paths:
       - backend:
