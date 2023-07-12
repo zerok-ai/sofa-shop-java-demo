@@ -30,7 +30,7 @@ spec:
         image:  alpine/curl
         # Just spin & wait forever
         command: [ "sh", "-c", "--" ]
-        args: [ "while true; do sleep 30; curl -ss -H 'traceparent: 00-aaaaaaaa'$(tr -dc 'A-F0-9' < /dev/urandom | head -c24)'-'$(tr -dc 'A-F0-9' < /dev/urandom | head -c16)'-01' -w '\n%{http_code} ' http://inventory.sofa-shop-ps.svc.cluster.local/api/inventory/all; done;" ]
+        args: [ "while true; do sleep 30; curl -ss -H 'traceparent: 00-aaaaaaaa'$(tr -dc 'a-f0-9' < /dev/urandom | head -c24)'-'$(tr -dc 'a-f0-9' < /dev/urandom | head -c16)'-01' -w '\n%{http_code} ' http://inventory.sofa-shop-ps.svc.cluster.local/api/inventory/all; done;" ]
         resources: 
           limits:
             cpu: "2"
