@@ -54,4 +54,16 @@ public class InventoryController {
     public void DeleteInventory(@RequestParam("id") String inventoryId){
         inventoryService.deleteInventory(inventoryId);
     }
+
+    @GetMapping("/err503")
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public void Error500Inventory(){
+
+    }
+
+    @GetMapping("/err422")
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public void Error5422Inventory(){
+
+    }
 }
