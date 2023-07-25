@@ -28,7 +28,7 @@ export MYSQL_HOST_LOCAL=localhost:3306
 
 export PS_USERNAME_SECRET=cG9zdGdyZXM=
 #export PS_PASSWORD_SECRET=UHkzd2p6NXdJUw==
-export PS_PASSWORD_SECRET=STVOa243MzNQZg==
+export PS_PASSWORD_SECRET=VWo5dUZqWVkxWA==
 export PS_DRIVER_DIALECT=org.hibernate.dialect.PostgreSQLDialect
 export PS_DRIVER_CLASS=org.postgresql.Driver
 export PS_DRIVER_TYPE=postgresql

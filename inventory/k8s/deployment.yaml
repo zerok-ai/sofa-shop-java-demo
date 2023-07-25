@@ -9,15 +9,28 @@ spec:
   selector:
     matchLabels:
       app: inventory
+      group: zerok-demoapp
   template:
     metadata:
       labels:
         app: inventory
+        group: zerok-demoapp
     spec:
       containers:
         - name: inventory
           image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/inventory:configurable
           imagePullPolicy: Always
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 1
+          resources:
+            limits:
+              cpu: "0.3"
+            requests:
+              cpu: "0.1"
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables

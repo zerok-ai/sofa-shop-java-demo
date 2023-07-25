@@ -5,6 +5,7 @@ import ai.zerok.inventory.model.InventoryRequest;
 import ai.zerok.inventory.model.InventoryRequestArr;
 import ai.zerok.inventory.service.InventoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,15 @@ public class InventoryController {
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<InventoryDetailsResponse> getAllInventory(){
-        return inventoryService.getAll();
+    public List<InventoryDetailsResponse> getAllInventory(@RequestParam(value = "rndon", required = false) boolean rndOn,
+            @RequestParam(value = "rndlimit", required = false, defaultValue = "0") int rndLimit){
+        List<InventoryDetailsResponse> response = inventoryService.getAll();
+        if(rndOn) {
+            generateNumbers(rndLimit);
+            System.out.println("random numbers generated " + rndLimit);
+        }
+
+        return response;
     }
 
     @PutMapping
@@ -65,5 +73,20 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public void Error5422Inventory(){
 
+    }
+
+    @GetMapping("/exception")
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public void Exception(){
+        throw new RuntimeException("Hello");
+    }
+
+    private void generateNumbers(int n){
+        if(n <= 0){
+            n = 100;
+        }
+        for(int i = 0;i < n; i++){
+            Math.random();
+        }
     }
 }

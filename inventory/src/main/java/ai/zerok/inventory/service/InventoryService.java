@@ -49,21 +49,23 @@ public class InventoryService {
 
         List<InventoryDetailsResponse> responseList = new ArrayList<>();
 
-        for (Product product: productList.getProductList()) {
-            InventoryDetailsResponse response = new InventoryDetailsResponse();
+        if(productList.getProductList() != null) {
+            for (Product product : productList.getProductList()) {
+                InventoryDetailsResponse response = new InventoryDetailsResponse();
 
-            response.setProductId(product.getId());
-            response.setSkuId(skuToQuantityMap.get(product.getSku()).getId());
-            response.setCurrentInventory(skuToQuantityMap.get(product.getSku()).getCurrentInventory());
-            response.setBrand(product.getBrand());
-            response.setImage(product.getImage());
-            response.setName(product.getName());
-            response.setCategories(product.getCategories());
-            response.setPrice(product.getPrice());
-            response.setSku(product.getSku());
-            response.setDescription(product.getDescription());
+                response.setProductId(product.getId());
+                response.setSkuId(skuToQuantityMap.get(product.getSku()).getId());
+                response.setCurrentInventory(skuToQuantityMap.get(product.getSku()).getCurrentInventory());
+                response.setBrand(product.getBrand());
+                response.setImage(product.getImage());
+                response.setName(product.getName());
+                response.setCategories(product.getCategories());
+                response.setPrice(product.getPrice());
+                response.setSku(product.getSku());
+                response.setDescription(product.getDescription());
 
-            responseList.add(response);
+                responseList.add(response);
+            }
         }
 
         return responseList;
