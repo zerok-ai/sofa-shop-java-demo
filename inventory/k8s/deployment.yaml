@@ -29,8 +29,10 @@ spec:
           resources:
             limits:
               cpu: "0.3"
+              memory: "512Mi"
             requests:
               cpu: "0.1"
+              memory: "300Mi"
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables
