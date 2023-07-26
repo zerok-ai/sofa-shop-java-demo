@@ -5,7 +5,7 @@ source $SCRIPTS_DIR/variables.sh
 
 dashboardName=$1
 
-kubectl delete configmap ${dashboardName} --namespace monitoring 
+kubectl delete configmap ${dashboardName} --namespace monitoring
 
 kubectl create configmap ${dashboardName} \
     --namespace monitoring \
@@ -14,4 +14,6 @@ kubectl create configmap ${dashboardName} \
 
 kubectl label --overwrite --namespace monitoring configmap \
     ${dashboardName} \
-    grafana_dashboard="1" 
+    grafana_dashboard="1"
+
+#perl -pi -e "s/loadclient03/loadclient02/" $setupfolder/../grafana/${dashboardName}.json
