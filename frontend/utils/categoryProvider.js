@@ -1,8 +1,10 @@
-import inventory from './inventory'
+import { fetchInventory } from "./inventoryProvider"
 
-async function fetchCategories () {
+async function fetchCategories() {
+  const rdata = await fetchInventory()
+  const inventory = rdata.data
   const categories = inventory.reduce((acc, next) => {
-    next.categories.map(category => {
+    next.categories.map((category) => {
       if (acc.includes(category)) return
       acc.push(category)
     })

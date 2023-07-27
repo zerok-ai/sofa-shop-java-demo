@@ -103,12 +103,12 @@ const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
 
 export async function getStaticProps() {
   // const inventory = await getProducts()
-  const inventory = await fetchInventory()
-  
+  const rdata = await fetchInventory()
+  const inventory = rdata.data
   const inventoryCategorized = inventory.reduce((acc, next) => {
     const categories = next.categories
-    categories.forEach(c => {
-      const index = acc.findIndex(item => item.name === c)
+    categories.forEach((c) => {
+      const index = acc.findIndex((item) => item.name === c)
       if (index !== -1) {
         const item = acc[index]
         item.itemCount = item.itemCount + 1
@@ -117,19 +117,19 @@ export async function getStaticProps() {
         const item = {
           name: c,
           image: next.image,
-          itemCount: 1
+          itemCount: 1,
         }
         acc.push(item)
       }
     })
     return acc
   }, [])
-  
+
   return {
     props: {
       inventoryData: inventory,
-      categories: inventoryCategorized
-    }
+      categories: inventoryCategorized,
+    },
   }
 }
 

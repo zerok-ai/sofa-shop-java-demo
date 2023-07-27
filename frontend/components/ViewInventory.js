@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { slugify } from '../utils/helpers'
 import { FaTimes } from 'react-icons/fa'
 import { getProducts } from '../services/dataservice'
+import { toast } from "react-toastify"
 
 class ViewInventory extends React.Component {
   state = {
@@ -18,8 +19,18 @@ class ViewInventory extends React.Component {
   }
   fetchInventory = async() => {
     // const inventory = await getProducts();
-    const inventory = await fetchInventory()
-    this.setState({ inventory })
+    try {
+      const rdata = await fetchInventory()
+      const inventory = rdata.data
+      this.setState({ inventory })
+    } catch (err) {
+      toast.error("Could not fetch inventory", {
+        position: toast.POSITION.BOTTOM_CENTER,
+        autoClose: 7000,
+        draggable: false,
+        closeOnClick: false,
+      })
+    }
   }
   editItem = (item, index) => {
     const editingIndex = index
