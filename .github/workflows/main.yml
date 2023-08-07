@@ -10,6 +10,7 @@ on:
         type: choice
         description: 'Sofa shop mode (mysql or ps)'
         required: true
+        default: mysql
         options:
           - ps
           - mysql
@@ -26,13 +27,14 @@ on:
         required: true
         description: 'App name to be built'
         options:
+          - none
           - inventory
           - order
           - product
           - all
       DEPLOY:
         type: boolean
-        description: Do you want to deploy this as well?
+        description: Do you want to deploy sofa-shop (all) as well?
 env:
   GOOS: ${{ vars.GOOS }}
   ENV: ${{ github.event.inputs.ENV }}
@@ -157,5 +159,4 @@ jobs:
       - name: Deploy All
         working-directory: ./
         if: ${{ env.DEPLOY == 'true' }}
-#        run: MODE=$MODE DB_PASSWORD=$DB_PASSWORD DB_USERNAME=$DB_USERNAME ./setup.sh
-        run: ./setup.sh -m mysql
+        run: MODE=$MODE DB_PASSWORD=$DB_PASSWORD DB_USERNAME=$DB_USERNAME ./setup.sh

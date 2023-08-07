@@ -15,7 +15,7 @@ show_help() {
   echo "  -e <external_hostname>: Specify the external hostname for the deployment."
   echo "  -c <command>: Specify the command (apply or delete). Default: $APPLY_COMMAND"
   echo "  -n <namespace>: Specify the namespace for the deployment. Default: $DEFAULT_NAMESPACE"
-  echo "  -m <mode>: Specify the mode (postgres or mysql). Default: $MODE_POSTGRES"
+  echo "  -m <mode>: Specify the mode (postgres or mysql). Default: $MODE_MYSQL"
   echo "  -h: Show this help message."
   echo ""
   echo "For more information on how default values are calculated, refer to the README.md file"
@@ -32,7 +32,7 @@ while getopts "e:c:n:m:h" opt; do
       COMMAND="${OPTARG:-$APPLY_COMMAND}"
       ;;
     m)
-      MODE="${OPTARG:-$MODE_POSTGRES}"
+      MODE="${OPTARG:-$MODE_MYSQL}"
       ;;
     n)
       NAMESPACE="${OPTARG:-$DEFAULT_NAMESPACE-$MODE}"
@@ -49,7 +49,7 @@ while getopts "e:c:n:m:h" opt; do
 done
 
 if [[ -z "$MODE" ]]; then
-  MODE="$MODE_POSTGRES"
+  MODE="$MODE_MYSQL"
 fi
 
 if [[ -z "$NAMESPACE" ]]; then
