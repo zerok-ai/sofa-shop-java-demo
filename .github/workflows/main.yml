@@ -167,6 +167,7 @@ jobs:
   
 
   deploy-all:
+    needs: [ inventory-build,product-build,order-build ]
     runs-on: zk-self-hosted
     environment: ${{ github.event.inputs.ENV }}
     steps:
