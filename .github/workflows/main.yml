@@ -13,6 +13,10 @@ on:
         options:
           - ps
           - mysql
+      GKE_CLUSTER:
+        description: 'Cluster Name'
+        required: true
+        default: 'pxclient02'
       APP_NAME:
         type: choice
         required: true
@@ -36,7 +40,7 @@ env:
   DOCKER_REG: ${{ vars.DOCKER_REG }}
   PROJECT_ID:  ${{ vars.PROJECT_ID }}
   DOCKER_REPO:  ${{ vars.DOCKER_REPO }}
-  GKE_CLUSTER:  ${{ vars.GKE_CLUSTER }}
+  GKE_CLUSTER: ${{ github.event.inputs.GKE_CLUSTER }}
   GKE_ZONE : ${{ vars.GKE_ZONE }}
   APP_NAME: ${{ github.event.inputs.APP_NAME }}
   GOPRIVATE: ${{ vars.GOPRIVATE }}
