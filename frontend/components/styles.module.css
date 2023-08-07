@@ -1,0 +1,24 @@
+.input {
+    height:32px;
+    border:1px solid #e5e7eb;
+    padding:8px;
+    min-width:300px;
+}
+
+.input::focus {
+    border:1px solid black;
+}
+
+
+.error,.success {
+    margin-top:8px;
+}
+.error{
+    color:red;
+    font-size:12px;
+}
+
+.success {
+    color:green;
+    font-size:12px;
+}

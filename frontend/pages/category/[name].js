@@ -44,25 +44,15 @@ const Category = (props) => {
   )
 }
 
-export async function getStaticPaths () {
-  const categories = await fetchCategories()
-  const paths = categories.map(category => {
-    return { params: { name: slugify(category) }}
-  })
-  return {
-    paths,
-    fallback: false
-  }
-}
 
-export async function getStaticProps ({ params }) {
-  const category = params.name.replace(/-/g," ")
+export async function getServerSideProps({ params }) {
+  const category = params.name.replace(/-/g, " ")
   const inventory = await inventoryForCategory(category)
   return {
     props: {
       inventory,
-      title: category
-    }
+      title: category,
+    },
   }
 }
 

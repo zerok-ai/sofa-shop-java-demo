@@ -4,13 +4,14 @@ export default function QuantityPicker({
   increment, decrement, numberOfitems, hideQuantityLabel
 }) {
   return (
-    <div className={`flex items-center`}>
+    <div className={`flex flex-col justify-center`}>
       {
         !hideQuantityLabel && (
-          <div className="px-2 text-xs">QUANTITY</div>
+          <div className="py-2 text-xs">QUANTITY</div>
         )
       }
-      <button
+     <div className="flex">
+     <button
         className="
         w-10 h-10 text-xl
         md:w-8 md:h-8 md:text-sm 
@@ -33,6 +34,7 @@ export default function QuantityPicker({
         focus:outline-none
         "
         onClick={decrement}>-</button>
+     </div>
     </div>
   )
 }

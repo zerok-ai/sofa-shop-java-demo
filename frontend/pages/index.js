@@ -9,7 +9,6 @@ import { getProducts } from '../services/dataservice'
 const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
   const inventory = inventoryData.slice(0, 4)
   const categories = categoryData.slice(0, 2)
-
   return (
     <>
       <CartLink />
@@ -104,7 +103,7 @@ const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
 export async function getStaticProps() {
   // const inventory = await getProducts()
   const rdata = await fetchInventory()
-  const inventory = rdata.data
+  const inventory = rdata.data;
   const inventoryCategorized = inventory.reduce((acc, next) => {
     const categories = next.categories
     categories.forEach((c) => {
@@ -130,6 +129,7 @@ export async function getStaticProps() {
       inventoryData: inventory,
       categories: inventoryCategorized,
     },
+    revalidate: 1,
   }
 }
 

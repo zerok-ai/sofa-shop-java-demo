@@ -8,6 +8,7 @@ import { slugify } from '../../utils/helpers'
 import CartLink from '../../components/CartLink'
 import { SiteContext, ContextProviderComponent } from '../../context/mainContext'
 import { getProducts } from '../../services/dataservice'
+import PincodeCheck from '../../components/PincodeCheck'
 
 const ItemView = (props) => {
   const [numberOfitems, updateNumberOfItems] = useState(1)
@@ -53,12 +54,13 @@ const ItemView = (props) => {
           ">{name}</h1>
           <h2 className="text-2xl tracking-wide sm:py-8 py-6">${price}</h2>
           <p className="text-gray-600 leading-7">{description}</p>
-          <div className="my-6">
+          <div className="my-6 flex justify-between content-end">
             <QuantityPicker
               increment={increment}
               decrement={decrement}
               numberOfitems={numberOfitems}
             />
+            <PincodeCheck name={name} />
           </div>
           <Button
             full
@@ -94,7 +96,8 @@ export async function getStaticProps ({ params }) {
   return {
     props: {
       product,
-    }
+    },
+    revalidate: 1,
   }
 }
 
