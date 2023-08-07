@@ -60,33 +60,18 @@ env:
   PS_PASSWORD_SECRET: ${{ secrets.PS_PASSWORD_BASE64 }}
 
 jobs:
-  build:
+  inventory-build:
     runs-on: zk-self-hosted
     environment: ${{ github.event.inputs.ENV }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Configure git for private modules
-        run: git config --global url."https://$TOKEN:x-oauth-basic@github.com/".insteadOf "https://github.com/"
-
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v0'
-        with:
-          credentials_json: '${{ env.GKE_SA_KEY }}'
 
       - name: login to docker registry
-        run: |
-          gcloud auth configure-docker $DOCKER_REG --quiet
-          echo $APP_NAME
+          run: |
+            gcloud auth configure-docker $DOCKER_REG --quiet
+            echo $APP_NAME
 
-      - id: 'get-credentials'
-        uses: 'google-github-actions/get-gke-credentials@v1'
-        with:
-          cluster_name: '${{ env.GKE_CLUSTER }}'
-          location: '${{ env.GKE_ZONE }}'
-
-      ## Inventory Build and Push
       - name: Build Inventory
         working-directory: ./inventory
         if: ${{ (env.APP_NAME == 'inventory') || (env.APP_NAME == 'all') }}
@@ -110,7 +95,18 @@ jobs:
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$GITHUB_SHA"
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$DOCKER_TAG"
 
-      ## Product Build and Push
+  product-build:
+    runs-on: zk-self-hosted
+    environment: ${{ github.event.inputs.ENV }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: login to docker registry
+          run: |
+            gcloud auth configure-docker $DOCKER_REG --quiet
+            echo $APP_NAME
+
       - name: Build Product
         working-directory: ./product
         if: ${{ (env.APP_NAME == 'product') || (env.APP_NAME == 'all') }}
@@ -134,7 +130,19 @@ jobs:
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA"
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$DOCKER_TAG"
 
-      ## Order Build and Push
+
+  order-build:
+    runs-on: zk-self-hosted
+    environment: ${{ github.event.inputs.ENV }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: login to docker registry
+          run: |
+            gcloud auth configure-docker $DOCKER_REG --quiet
+            echo $APP_NAME
+
       - name: Build Order
         working-directory: ./order
         if: ${{ (env.APP_NAME == 'order') || (env.APP_NAME == 'all') }}
@@ -151,16 +159,34 @@ jobs:
         run: |-
           docker tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA" "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$DOCKER_TAG"
 
-
       - name: Docker push Order
         working-directory: ./order
         if: ${{ (env.APP_NAME == 'order') || (env.APP_NAME == 'all') }}
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA"
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$DOCKER_TAG"
+  
 
-      ## All Deploy
-      - name: Deploy All
+  deploy-all:
+    runs-on: zk-self-hosted
+    environment: ${{ github.event.inputs.ENV }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ env.GKE_SA_KEY }}'
+
+      - id: 'get-credentials'
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          cluster_name: '${{ env.GKE_CLUSTER }}'
+          location: '${{ env.GKE_ZONE }}'
+
+      - name: Deploy
         working-directory: ./
         if: ${{ env.DEPLOY == 'true' }}
         run: MODE=$MODE MYSQL_USERNAME_SECRET=$MYSQL_USERNAME_SECRET MYSQL_PASSWORD_SECRET=$MYSQL_PASSWORD_SECRET PS_USERNAME_SECRET=$PS_USERNAME_SECRET PS_PASSWORD_SECRET=$PS_PASSWORD_SECRET ./setup.sh
