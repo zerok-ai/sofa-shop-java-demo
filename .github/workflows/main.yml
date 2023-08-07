@@ -68,7 +68,7 @@ jobs:
           echo $APP_NAME
           
       - name: printing app name 2
-        if: ${{ env.APP_NAME == 'inventory' || 'all' }}
+        if: ${{ (env.APP_NAME == 'inventory') || (env.APP_NAME == 'all') }}
         run: |
           echo "printing app name 2"
 
@@ -82,11 +82,11 @@ jobs:
         run: |
           echo "printing app name 4"
 
-#      - id: 'auth'
-#        name: 'Authenticate to Google Cloud'
-#        uses: 'google-github-actions/auth@v0'
-#        with:
-#          credentials_json: '${{ env.GKE_SA_KEY }}'
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ env.GKE_SA_KEY }}'
 #
 #      - name: login to docker registry
 #        run: |
