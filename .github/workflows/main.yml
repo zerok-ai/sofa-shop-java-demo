@@ -68,9 +68,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: login to docker registry
-          run: |
-            gcloud auth configure-docker $DOCKER_REG --quiet
-            echo $APP_NAME
+        run: |
+          gcloud auth configure-docker $DOCKER_REG --quiet
+          echo $APP_NAME
 
       - name: Build Inventory
         working-directory: ./inventory
@@ -103,9 +103,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: login to docker registry
-          run: |
-            gcloud auth configure-docker $DOCKER_REG --quiet
-            echo $APP_NAME
+        run: |
+          gcloud auth configure-docker $DOCKER_REG --quiet
+          echo $APP_NAME
 
       - name: Build Product
         working-directory: ./product
@@ -130,7 +130,6 @@ jobs:
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA"
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$DOCKER_TAG"
 
-
   order-build:
     runs-on: zk-self-hosted
     environment: ${{ github.event.inputs.ENV }}
@@ -139,9 +138,9 @@ jobs:
         uses: actions/checkout@v3
 
       - name: login to docker registry
-          run: |
-            gcloud auth configure-docker $DOCKER_REG --quiet
-            echo $APP_NAME
+        run: |
+          gcloud auth configure-docker $DOCKER_REG --quiet
+          echo $APP_NAME
 
       - name: Build Order
         working-directory: ./order
