@@ -58,14 +58,23 @@ const PincodeCheck = ({ name }) => {
     <div className="flex">
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col">
-          <p className="text-sm my-1">Check Availability</p>
-          <input
-            type="text"
-            className={styles.input}
-            value={pincode}
-            disabled={status === "loading"}
-            onChange={(e) => setPincode(e.target.value)}
-          />
+          <p className="text-sm my-1">Enter zipcode to check availability</p>
+          <div className="flex flex-row justify-between">
+            <input
+              type="text"
+              className={styles.input}
+              value={pincode}
+              disabled={status === "loading"}
+              onChange={(e) => setPincode(e.target.value)}
+            />
+            <button
+              type="submit"
+              className={styles["button"]}
+              disabled={status === "loading"}
+            >
+              Check
+            </button>
+          </div>
           {getStatus()}
         </div>
       </form>
