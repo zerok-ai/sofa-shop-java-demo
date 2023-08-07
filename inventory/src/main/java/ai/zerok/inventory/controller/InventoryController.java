@@ -45,7 +45,7 @@ public class InventoryController {
         List<InventoryDetailsResponse> response = inventoryService.getAll();
         if(rndOn) {
             generateNumbers(rndLimit);
-            System.out.println("random numbers generated " + rndLimit);
+//            System.out.println("random numbers generated " + rndLimit);
         }
 
         if(rndMemOn) {
@@ -54,7 +54,7 @@ public class InventoryController {
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-            System.out.println("random jsons generated " + rndLimit);
+//            System.out.println("random jsons generated " + rndLimit);
         }
 
         return response;

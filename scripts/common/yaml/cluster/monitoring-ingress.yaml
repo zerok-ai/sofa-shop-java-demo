@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: grafana.pxclient01.getanton.com
+  - host: grafana.pxclient02.getanton.com
     http:
       paths:
       - backend:

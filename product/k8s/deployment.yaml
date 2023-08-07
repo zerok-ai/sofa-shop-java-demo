@@ -63,6 +63,12 @@ spec:
                   name: product-app-configmap
                   key: dbName
 
+            - name: AVAILABILITY_HOST  # Setting AVAILABILITY service url from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: product-app-configmap
+                  key: availabilityServiceURL
+
             - name: DB_USERNAME  # Setting Database username from Secret
               valueFrom:
                 secretKeyRef:

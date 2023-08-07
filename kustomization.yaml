@@ -7,3 +7,4 @@ bases:
   - ./inventory/k8s
   - ./order/k8s
   - ./product/k8s
+  - ./availability/k8s

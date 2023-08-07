@@ -7,6 +7,7 @@ data:
   db_driver_class: ${DB_DRIVER_CLASS}
   host: ${DB_HOST}
   dbName: productservice
+  availabilityServiceURL: availability.sofa-shop-mysql.svc.cluster.local
 kind: ConfigMap
 metadata:
   name: product-app-configmap
