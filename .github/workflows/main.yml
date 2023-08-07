@@ -66,6 +66,21 @@ jobs:
       - name: printing app name
         run: |
           echo $APP_NAME
+          
+      - name: printing app name 2
+        if: ${{ env.APP_NAME == 'inventory' || 'all' }}
+        run: |
+          echo "printing app name 2"
+
+      - name: printing app name 3
+        if: ${{ env.APP_NAME == 'inventory' }}
+        run: |
+          echo "printing app name 3"
+
+      - name: printing app name 4
+        if: ${{ env.APP_NAME == 'all' }}
+        run: |
+          echo "printing app name 4"
 
 #      - id: 'auth'
 #        name: 'Authenticate to Google Cloud'
