@@ -13,6 +13,10 @@ on:
         options:
           - ps
           - mysql
+      DOCKER_TAG:
+        description: 'Docker Image Tag'
+        required: true
+        default: 'latest'
       GKE_CLUSTER:
         description: 'Cluster Name'
         required: true
@@ -32,6 +36,7 @@ on:
 env:
   GOOS: ${{ vars.GOOS }}
   ENV: ${{ github.event.inputs.ENV }}
+  DOCKER_TAG: ${{ github.event.inputs.DOCKER_TAG }}
   MODE: ${{ github.event.inputs.MODE }}
   DEPLOY: ${{ github.event.inputs.DEPLOY }}
   GOARCH: ${{ vars.GOARCH }}
@@ -86,11 +91,17 @@ jobs:
         run: |-
           docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$GITHUB_SHA" .
 
+      - name: Docker Tag Inventory
+        if: ${{ env.APP_NAME == 'inventory' || 'all' }}
+        run: |-
+          docker tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$GITHUB_SHA" "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$DOCKER_TAG"
+      
       - name: Docker push Inventory
         working-directory: ./inventory
         if: ${{ env.APP_NAME == 'inventory' || 'all' }}
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$GITHUB_SHA"
+          docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/inventory:$DOCKER_TAG"
 
       ## Product Build and Push
       - name: Build Product
@@ -104,11 +115,17 @@ jobs:
         run: |-
           docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA" .
 
+      - name: Docker Tag Inventory
+        if: ${{ env.APP_NAME == 'inventory' || 'all' }}
+        run: |-
+          docker tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA" "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$DOCKER_TAG"
+
       - name: Docker push Product
         working-directory: ./product
         if: ${{ env.APP_NAME == 'product' || 'all' }}
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$GITHUB_SHA"
+          docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/product:$DOCKER_TAG"
 
       ## Order Build and Push
       - name: Build Order
@@ -122,11 +139,18 @@ jobs:
         run: |-
           docker build --tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA" .
 
+      - name: Docker Tag Inventory
+        if: ${{ env.APP_NAME == 'inventory' || 'all' }}
+        run: |-
+          docker tag "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA" "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$DOCKER_TAG"
+      
+
       - name: Docker push Order
         working-directory: ./order
         if: ${{ env.APP_NAME == 'order' || 'all' }}
         run: |-
           docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$GITHUB_SHA"
+          docker push "$DOCKER_REG/$PROJECT_ID/$DOCKER_REPO/order:$DOCKER_TAG"
 
       ## All Deploy
       - name: Deploy All
