@@ -1,3 +1,4 @@
+#!/bin/bash
 ###
 #  Usage: 
 #     ./setup.sh [apply|delete]
