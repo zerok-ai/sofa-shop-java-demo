@@ -1,16 +1,8 @@
-# DB_DRIVER_TYPE = postgres / mysql
-# DB_DRIVER_CLASS = org.postgresql.Driver / com.mysql.cj.jdbc.Driver
-# DB_PRINT_SQL = true / false
-# DB_URL_PARAMS =  / ?createDatabaseIfNotExist=true
-# DB_HIBERNATE_DIALECT = org.hibernate.dialect.PostgreSQLDialect / org.hibernate.dialect.MySQL5Dialect
-# DB_USERNAME =
-# DB_PASSWORD =
-# DB_HOST =
-
 export DB_PRINT_SQL=false
 
 export DEFAULT_NAMESPACE='sofa-shop'
-random_string=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
+#random_string=$(cat /dev/urandom | tr -dc 'a-z0-9' | fold -w 4 | head -n 1)
+random_string=$(openssl rand -hex 4)
 export DEFAULT_EXTERNAL_HOSTNAME="sofa-shop.$random_string.getanton.com"
 export APPLY_COMMAND='apply'
 export DELETE_COMMAND='delete'
