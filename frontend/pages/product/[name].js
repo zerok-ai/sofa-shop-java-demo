@@ -92,12 +92,11 @@ export async function getStaticProps ({ params }) {
   const product = inventory.data.find(
     (item) => slugify(item.name) === slugify(name)
   )
-
   return {
     props: {
       product,
     },
-    revalidate: 1,
+    revalidate: 60,
   }
 }
 

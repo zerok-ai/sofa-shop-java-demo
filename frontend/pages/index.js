@@ -129,7 +129,7 @@ export async function getStaticProps() {
       inventoryData: inventory,
       categories: inventoryCategorized,
     },
-    revalidate: 1,
+    revalidate: 150,
   }
 }
 

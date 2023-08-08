@@ -68,9 +68,9 @@ export async function getStaticProps() {
 
   return {
     props: {
-      categories: inventoryCategories
+      categories: inventoryCategories,
     },
-    revalidate:1
+    revalidate: 150,
   }
 }
 

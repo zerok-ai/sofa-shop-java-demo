@@ -47,7 +47,7 @@ const Category = (props) => {
 
 export async function getServerSideProps({ params }) {
   const category = params.name.replace(/-/g, " ")
-  const inventory = await inventoryForCategory(category)
+  const inventory = await inventoryForCategory(category);
   return {
     props: {
       inventory,
