@@ -6,6 +6,9 @@ import { fetchInventory } from '../utils/inventoryProvider'
 import { getProducts } from '../services/dataservice'
 
 function Categories ({ categories = [] }) {
+  if (!categories.length) {
+    return null
+  }
   return (
     <>
       <div className="w-full">
@@ -43,34 +46,41 @@ function Categories ({ categories = [] }) {
   )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // const inventory = await getProducts();
-  const inventory = await fetchInventory()
-  const inventoryCategories = inventory.data.reduce((acc, next) => {
-    const categories = next.categories
-    categories.forEach((c) => {
-      const index = acc.findIndex((item) => item.name === c)
-      if (index !== -1) {
-        const item = acc[index]
-        item.itemCount = item.itemCount + 1
-        acc[index] = item
-      } else {
-        const item = {
-          name: c,
-          image: next.image,
-          itemCount: 1,
+  try {
+    const inventory = await fetchInventory()
+    const inventoryCategories = inventory.data.reduce((acc, next) => {
+      const categories = next.categories
+      categories.forEach((c) => {
+        const index = acc.findIndex((item) => item.name === c)
+        if (index !== -1) {
+          const item = acc[index]
+          item.itemCount = item.itemCount + 1
+          acc[index] = item
+        } else {
+          const item = {
+            name: c,
+            image: next.image,
+            itemCount: 1,
+          }
+          acc.push(item)
         }
-        acc.push(item)
-      }
-    })
-    return acc
-  }, [])
+      })
+      return acc
+    }, [])
 
-  return {
-    props: {
-      categories: inventoryCategories,
-    },
-    revalidate: 150,
+    return {
+      props: {
+        categories: inventoryCategories,
+      },
+    }
+  } catch (err) {
+    return {
+      props: {
+        categories: [],
+      },
+    }
   }
 }
 

@@ -73,20 +73,8 @@ const ItemView = (props) => {
   )
 }
 
-export async function getStaticPaths () {
-  const inventory = await fetchInventory()
-  // const inventory = await getProducts()
-  const paths = inventory.data.map((item) => {
-    return { params: { name: slugify(item.name) } }
-  })
-  return {
-    paths,
-    fallback: false
-  }
-}
-
-export async function getStaticProps ({ params }) {
-  const name = params.name.replace(/-/g," ")
+export async function getServerSideProps({ params }) {
+  const name = params.name.replace(/-/g, " ")
   // const inventory = await getProducts()
   const inventory = await fetchInventory()
   const product = inventory.data.find(
@@ -96,7 +84,6 @@ export async function getStaticProps ({ params }) {
     props: {
       product,
     },
-    revalidate: 60,
   }
 }
 

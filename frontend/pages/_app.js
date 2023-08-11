@@ -11,9 +11,15 @@ function Ecommerce({ Component, pageProps, categories }) {
 }
 
 Ecommerce.getInitialProps = async () => {
-  const categories = await fetchCategories()
-  return {
-    categories
+  try {
+    const categories = await fetchCategories()
+    return {
+      categories,
+    }
+  } catch (err) {
+    return {
+      categories: [],
+    }
   }
 }
 

@@ -7,6 +7,10 @@ import appDetails from '../utils/appDetails'
 import { getProducts } from '../services/dataservice'
 
 const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
+  if (!inventoryData.length) {
+    console.log("api error")
+    return null
+  }
   const inventory = inventoryData.slice(0, 4)
   const categories = categoryData.slice(0, 2)
   return (
@@ -100,36 +104,44 @@ const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
   )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // const inventory = await getProducts()
-  const rdata = await fetchInventory()
-  const inventory = rdata.data;
-  const inventoryCategorized = inventory.reduce((acc, next) => {
-    const categories = next.categories
-    categories.forEach((c) => {
-      const index = acc.findIndex((item) => item.name === c)
-      if (index !== -1) {
-        const item = acc[index]
-        item.itemCount = item.itemCount + 1
-        acc[index] = item
-      } else {
-        const item = {
-          name: c,
-          image: next.image,
-          itemCount: 1,
+  try {
+    const rdata = await fetchInventory()
+    const inventory = rdata.data
+    const inventoryCategorized = inventory.reduce((acc, next) => {
+      const categories = next.categories
+      categories.forEach((c) => {
+        const index = acc.findIndex((item) => item.name === c)
+        if (index !== -1) {
+          const item = acc[index]
+          item.itemCount = item.itemCount + 1
+          acc[index] = item
+        } else {
+          const item = {
+            name: c,
+            image: next.image,
+            itemCount: 1,
+          }
+          acc.push(item)
         }
-        acc.push(item)
-      }
-    })
-    return acc
-  }, [])
+      })
+      return acc
+    }, [])
 
-  return {
-    props: {
-      inventoryData: inventory,
-      categories: inventoryCategorized,
-    },
-    revalidate: 150,
+    return {
+      props: {
+        inventoryData: inventory,
+        categories: inventoryCategorized,
+      },
+    }
+  } catch (err) {
+    return {
+      props: {
+        inventoryData: [],
+        categories: [],
+      },
+    }
   }
 }
 

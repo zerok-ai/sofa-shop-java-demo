@@ -43,7 +43,7 @@ class ContextProviderComponent extends React.Component {
   addToCart = item => {
     const storageState = JSON.parse(window.localStorage.getItem(STORAGE_KEY))
     const { cart } = storageState
-    console.log({ item })
+    
     if (cart.length) {
       const index = cart.findIndex((cartItem) => cartItem.sku === item.sku)
       if (index > -1) {
