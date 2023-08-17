@@ -2,6 +2,7 @@ import axios from "axios"
 import inventory from "./inventory"
 import raxios from "./raxios"
 import { LIST_INVENTORY_ENDPOINT } from "./endpoints"
+import { STATIC_INVENTORY } from "./staticInventory"
 
 /*
 Inventory items should adhere to the following schema:
@@ -20,7 +21,8 @@ type Product {
 
 async function fetchInventory() {
   // const inventory = API.get(apiUrl)
-  return await raxios.get(LIST_INVENTORY_ENDPOINT)
+  return await raxios.get(LIST_INVENTORY_ENDPOINT + "/asd")
 }
+
 
 export { fetchInventory, inventory as staticInventory }

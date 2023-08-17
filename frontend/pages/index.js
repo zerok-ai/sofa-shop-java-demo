@@ -2,58 +2,59 @@ import Head from 'next/head'
 import { Center, Footer, Tag, Showcase, DisplaySmall, DisplayMedium } from '../components'
 import { titleIfy, slugify } from '../utils/helpers'
 import { fetchInventory } from '../utils/inventoryProvider'
-import CartLink from '../components/CartLink'
-import appDetails from '../utils/appDetails'
-import { getProducts } from '../services/dataservice'
+import { Fragment } from "react"
+import PageHeader from "../components/PageHeader"
 
 const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
   if (!inventoryData.length) {
     console.log("api error")
-    return null
+    return (
+      <Fragment>
+        <PageHeader />
+        <h6 className="mb-3" style={{ height: "60vh" }}>
+          Could not fetch inventory.
+        </h6>
+      </Fragment>
+    )
   }
   const inventory = inventoryData.slice(0, 4)
   const categories = categoryData.slice(0, 2)
+
   return (
     <>
-      <CartLink />
       <div className="w-full">
-        <Head>
-          <title>{appDetails.title}</title>
-          <meta name="description" content={appDetails.title} />
-          <meta property="og:title" content={appDetails.title} key="title" />
-        </Head>
-        <div className="bg-blue-300
+        <PageHeader />
+        <div
+          className="bg-blue-300
         p-6 pb-10 smpb-6
-        flex lg:flex-row flex-col">
+        flex lg:flex-row flex-col"
+        >
           <div className="pt-4 pl-2 sm:pt-12 sm:pl-12 flex flex-col">
-            <Tag
-              year="2021"
-              category="SOFAS"
-            />
+            <Tag year="2021" category="SOFAS" />
             <Center
               price="200"
               title={inventory[2].name}
               link={`/product/${slugify(inventory[2].name)}`}
             />
-            <Footer
-              designer="Jason Bourne"
-            />
+            <Footer designer="Jason Bourne" />
           </div>
           <div className="flex flex-1 justify-center items-center relative">
-              <Showcase
-                imageSrc={inventory[2].image}
-              />
-              <div className="absolute
+            <Showcase imageSrc={inventory[2].image} />
+            <div
+              className="absolute
               w-48 h-48 sm:w-72 sm:h-72 xl:w-88 xl:h-88
-              bg-white z-0 rounded-full" />
+              bg-white z-0 rounded-full"
+            />
           </div>
         </div>
       </div>
-      <div className="
+      <div
+        className="
         lg:my-8 lg:grid-cols-2
         grid-cols-1
         grid gap-4 my-4 
-      ">
+      "
+      >
         <DisplayMedium
           imageSrc={categories[0].image}
           subtitle={`${categories[0].itemCount} items`}
@@ -69,7 +70,10 @@ const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
       </div>
       <div className="pt-10 pb-6 flex flex-col items-center">
         <h2 className="text-4xl mb-3">Trending Now</h2>
-        <p className="text-gray-600 text-sm">Find the perfect piece or accessory to finish off your favorite room in the house.</p>
+        <p className="text-gray-600 text-sm">
+          Find the perfect piece or accessory to finish off your favorite room
+          in the house.
+        </p>
       </div>
       <div className="my-8 flex flex-col lg:flex-row justify-between">
         <DisplaySmall

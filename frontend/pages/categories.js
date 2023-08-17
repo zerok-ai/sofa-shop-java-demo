@@ -4,8 +4,9 @@ import { DisplayMedium } from '../components'
 import CartLink from '../components/CartLink'
 import { fetchInventory } from '../utils/inventoryProvider'
 import { getProducts } from '../services/dataservice'
+import { STATIC_INVENTORY } from "../utils/staticInventory"
 
-function Categories ({ categories = [] }) {
+function Categories({ categories = [] }) {
   if (!categories.length) {
     return null
   }
@@ -15,21 +16,30 @@ function Categories ({ categories = [] }) {
         <CartLink />
         <Head>
           <title>Jamstack ECommerce - All Categories</title>
-          <meta name="description" content={`Jamstack ECommerce - All categories`} />
-          <meta property="og:title" content="Jamstack ECommerce - All Categories" key="title" />
+          <meta
+            name="description"
+            content={`Jamstack ECommerce - All categories`}
+          />
+          <meta
+            property="og:title"
+            content="Jamstack ECommerce - All Categories"
+            key="title"
+          />
         </Head>
-        <div className="
+        <div
+          className="
           pt-4 sm:pt-10 pb-8
-        ">
+        "
+        >
           <h1 className="text-5xl font-light">All categories</h1>
         </div>
         <div className="flex flex-col items-center">
-          
           {/* <div className="my-4 lg:my-8 flex flex-col lg:flex-row justify-between"> */}
-          <div className="grid gap-4
-          lg:grid-cols-3 md:grid-cols-2 grid-cols-1">
-          {
-            categories.map((category, index) => (
+          <div
+            className="grid gap-4
+          lg:grid-cols-3 md:grid-cols-2 grid-cols-1"
+          >
+            {categories.map((category, index) => (
               <DisplayMedium
                 key={index}
                 imageSrc={category.image}
@@ -37,8 +47,7 @@ function Categories ({ categories = [] }) {
                 title={titleIfy(category.name)}
                 link={`/category/${slugify(category.name)}`}
               />
-            ))
-          }
+            ))}
           </div>
         </div>
       </div>
@@ -48,9 +57,15 @@ function Categories ({ categories = [] }) {
 
 export async function getServerSideProps() {
   // const inventory = await getProducts();
+  let inventory
   try {
-    const inventory = await fetchInventory()
-    const inventoryCategories = inventory.data.reduce((acc, next) => {
+    rdata = await fetchInventory()
+    inventory = rdata.data
+  } catch {
+    inventory = STATIC_INVENTORY
+  }
+  try {
+    const inventoryCategories = inventory.reduce((acc, next) => {
       const categories = next.categories
       categories.forEach((c) => {
         const index = acc.findIndex((item) => item.name === c)
