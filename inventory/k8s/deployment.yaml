@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: inventory
-          image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/inventory:configurable
+          image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/inventory:configurable
           imagePullPolicy: Always
 #          readinessProbe:
 #            httpGet:

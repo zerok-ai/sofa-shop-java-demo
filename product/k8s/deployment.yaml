@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: product
-          image: us-west1-docker.pkg.dev/zerok-dev/java-spring-boot-demo/product:configurable
+          image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/product:configurable
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

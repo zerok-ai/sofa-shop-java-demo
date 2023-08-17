@@ -42,6 +42,7 @@ public class InventoryController {
     public List<InventoryDetailsResponse> getAllInventory(@RequestParam(value = "rndon", required = false) boolean rndOn,
                                                           @RequestParam(value = "rndmemon", required = false) boolean rndMemOn,
             @RequestParam(value = "rndlimit", required = false, defaultValue = "0") int rndLimit){
+        long startTime = System.currentTimeMillis();
         List<InventoryDetailsResponse> response = inventoryService.getAll();
         if(rndOn) {
             generateNumbers(rndLimit);
@@ -57,6 +58,9 @@ public class InventoryController {
 //            System.out.println("random jsons generated " + rndLimit);
         }
 
+        long currentTime = System.currentTimeMillis();
+        long diff = currentTime - startTime;
+        System.out.println("Time taken [INVENTORY /all] " + diff);
         return response;
     }
 

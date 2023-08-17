@@ -16,4 +16,4 @@ kubectl label --overwrite --namespace monitoring configmap \
     ${dashboardName} \
     grafana_dashboard="1"
 
-#perl -pi -e "s/pxclient02/pxclient02/" $setupfolder/../grafana/${dashboardName}.json
+#perl -pi -e "s/pxclient01/pxclient01/" $setupfolder/../grafana/${dashboardName}.json

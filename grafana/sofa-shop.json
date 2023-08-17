@@ -316,7 +316,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$sofa_shop_namespace\", resource=\"cpu\", pod=\"inventory-784cd596bb-zm9kq\"}) * 1000",
+          "expr": "sum(kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$sofa_shop_namespace\", resource=\"cpu\", pod=\"inventory-78df94ffd6-679pg\"}) * 1000",
           "hide": false,
           "legendFormat": "CPU Requests",
           "range": true,
@@ -328,7 +328,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"$sofa_shop_namespace\", pod=\"inventory-784cd596bb-zm9kq\"}) by (namespace) * 1000",
+          "expr": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"$sofa_shop_namespace\", pod=\"inventory-78df94ffd6-679pg\"}) by (namespace) * 1000",
           "hide": false,
           "legendFormat": "CPU Usage",
           "range": true,
@@ -340,7 +340,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$sofa_shop_namespace\", resource=\"cpu\", pod=\"inventory-784cd596bb-zm9kq\"}) * 1000\n",
+          "expr": "sum(kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$sofa_shop_namespace\", resource=\"cpu\", pod=\"inventory-78df94ffd6-679pg\"}) * 1000\n",
           "hide": false,
           "interval": "",
           "legendFormat": "CPU Limits",
@@ -573,7 +573,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum by(namespace) (container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$sofa_shop_namespace\", container!=\"POD\", image!=\"\", pod=\"inventory-784cd596bb-zm9kq\"})",
+          "expr": "sum by(namespace) (container_memory_working_set_bytes{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", namespace=\"$sofa_shop_namespace\", container!=\"POD\", image!=\"\", pod=\"inventory-78df94ffd6-679pg\"})",
           "interval": "",
           "legendFormat": "Memory Utilization",
           "range": true,
@@ -585,7 +585,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(\n    kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$sofa_shop_namespace\", resource=\"memory\", pod=\"inventory-784cd596bb-zm9kq\"}\n)\n",
+          "expr": "sum(\n    kube_pod_container_resource_requests{job=\"kube-state-metrics\", namespace=\"$sofa_shop_namespace\", resource=\"memory\", pod=\"inventory-78df94ffd6-679pg\"}\n)\n",
           "hide": false,
           "legendFormat": "Requests",
           "range": true,
@@ -597,7 +597,7 @@
             "uid": "prometheus"
           },
           "editorMode": "code",
-          "expr": "sum(\n    kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$sofa_shop_namespace\", resource=\"memory\", pod=\"inventory-784cd596bb-zm9kq\"}\n)\n",
+          "expr": "sum(\n    kube_pod_container_resource_limits{job=\"kube-state-metrics\", namespace=\"$sofa_shop_namespace\", resource=\"memory\", pod=\"inventory-78df94ffd6-679pg\"}\n)\n",
           "hide": false,
           "legendFormat": "Limits",
           "range": true,
@@ -996,7 +996,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -1118,7 +1119,8 @@
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "green",
+                "value": null
               },
               {
                 "color": "red",
@@ -2270,7 +2272,7 @@
         "name": "sofa_shop_inventory_traffic",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "1m_100-14m_100",
             "value": "1m_100-14m_100"
           }
@@ -2309,7 +2311,7 @@
         "name": "concurrencies",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "180_198_207_204_205_207",
             "value": "180_198_207_204_205_207"
           }
@@ -2329,7 +2331,7 @@
         "name": "qos_app_traffic",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "1m_800-2m_1000-2m_1100",
             "value": "1m_800-2m_1000-2m_1100"
           }
@@ -2349,7 +2351,7 @@
         "name": "qos_zk_traffic",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "1m_800-2m_1000_7:3-2m_1100_7:3",
             "value": "1m_800-2m_1000_7:3-2m_1100_7:3"
           }
@@ -2369,8 +2371,8 @@
       {
         "current": {
           "selected": true,
-          "text": "k6.pxclient02.getanton.com",
-          "value": "k6.pxclient02.getanton.com"
+          "text": "k6.pxclient01.getanton.com",
+          "value": "k6.pxclient01.getanton.com"
         },
         "hide": 0,
         "label": "k6-url",
@@ -2378,11 +2380,11 @@
         "options": [
           {
             "selected": true,
-            "text": "k6.pxclient02.getanton.com",
-            "value": "k6.pxclient02.getanton.com"
+            "text": "k6.pxclient01.getanton.com",
+            "value": "k6.pxclient01.getanton.com"
           }
         ],
-        "query": "k6.pxclient02.getanton.com",
+        "query": "k6.pxclient01.getanton.com",
         "skipUrlSync": false,
         "type": "textbox"
       },
@@ -2469,7 +2471,7 @@
     ]
   },
   "time": {
-    "from": "now-25m",
+    "from": "now-1h",
     "to": "now"
   },
   "timepicker": {
