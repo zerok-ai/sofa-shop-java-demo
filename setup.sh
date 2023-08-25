@@ -1,12 +1,12 @@
 ###
 #  Usage: 
-#     ./setup.sh [apply|delete]
+#     ./setup.sh sofa-shop.mysql.<clustername>.getanton.com [apply|delete]
 #  install/removes the deployment in specified Namespace.
 ### 
 scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
 
-DEFAULT_NAMESPACE='sofa-shop'
-DEFAULT_EXTERNAL_HOSTNAME='sofa-shop-fr.getanton.com'
+DEFAULT_NAMESPACE='sofa-shop-mysql'
+DEFAULT_EXTERNAL_HOSTNAME='sofa-shop.mysql.<clustername>.getanton.com'
 APPLY_COMMAND='apply'
 DELETE_COMMAND='delete'
 EXTERNAL_HOSTNAME="${1:-$DEFAULT_EXTERNAL_HOSTNAME}"
