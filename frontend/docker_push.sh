@@ -6,4 +6,4 @@ npm run build
 docker build . -t us-west1-docker.pkg.dev/zerok-dev/sofa-shop/frontend:$LABEL
 docker push us-west1-docker.pkg.dev/zerok-dev/sofa-shop/frontend:$LABEL
 
-kubectl apply -k ./k8s
+# kubectl apply -k ./k8s

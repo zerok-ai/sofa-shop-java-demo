@@ -5,6 +5,8 @@ import raxios from "../utils/raxios"
 import { toast } from "react-toastify"
 import { LIST_INVENTORY_ENDPOINT } from "../utils/endpoints"
 import axios from "axios"
+import { BULK_INVENTORY } from "../utils/bulkinventory"
+import { BULK_PRODUCTS } from "../utils/bulkProduct"
 
 class Inventory extends React.Component {
   state = {
@@ -14,18 +16,22 @@ class Inventory extends React.Component {
     this.setState(() => ({ viewState }))
   }
   bulkUpload() {
-    axios
-      .get("/bulk.json")
+    const inventory = BULK_INVENTORY
+    const products = BULK_PRODUCTS
+    raxios
+      .post("/api/product/all", products)
       .then((res) => {
-        const data = res.data
-        raxios
-          .post("/api/product/all", data)
-          .then((res) => {
-            toast.success("Inventory uploaded")
-          })
-          .catch((err) => {
-            toast.error("Could not upload inventory")
-          })
+        console.log("products uploaded")
+        toast.success("Products uploaded")
+      })
+      .catch((err) => {
+        toast.error("Could not upload inventory")
+      })
+    raxios
+      .post("/api/inventory/all", inventory)
+      .then((res) => {
+        console.log("inventory uploaded")
+        toast.success("Inventory uploaded")
       })
       .catch((err) => {
         toast.error("Could not upload inventory")
