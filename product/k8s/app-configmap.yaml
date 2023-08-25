@@ -5,7 +5,7 @@ data:
   db_hibernate_dialect: org.hibernate.dialect.MySQL5Dialect
   db_print_sql: "false"
   db_driver_class: com.mysql.cj.jdbc.Driver
-  host: mysql-svc.mysql.svc.cluster.local:3306
+  host: mysql.mysql.svc.cluster.local:3306
   dbName: productservice
 kind: ConfigMap
 metadata:
