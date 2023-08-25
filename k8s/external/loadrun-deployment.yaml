@@ -3,16 +3,16 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: external-ps
+  name: external-mysql
   labels:
-    name: external-ps
+    name: external-mysql
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: loadrun-deployment
-  namespace: external-ps
+  namespace: external-mysql
   labels:
     app: loadrun
 spec:
@@ -30,7 +30,7 @@ spec:
         image:  alpine/curl
         # Just spin & wait forever
         command: [ "sh", "-c", "--" ]
-        args: [ "while true; do sleep 30; curl -ss -H 'traceparent: 00-aaaaaaaa'$(tr -dc 'A-F0-9' < /dev/urandom | head -c24)'-'$(tr -dc 'A-F0-9' < /dev/urandom | head -c16)'-01' -w '\n%{http_code} ' http://inventory.sofa-shop-ps.svc.cluster.local/api/inventory/all; done;" ]
+        args: [ "while true; do sleep 30; curl -ss -H 'traceparent: 00-aaaaaaaa'$(tr -dc 'A-F0-9' < /dev/urandom | head -c24)'-'$(tr -dc 'A-F0-9' < /dev/urandom | head -c16)'-01' -w '\n%{http_code} ' http://inventory.sofa-shop-mysql.svc.cluster.local/api/inventory/all; done;" ]
         resources: 
           limits:
             cpu: "2"
