@@ -10,6 +10,7 @@ module.exports = () => {
     };
     return {
       rewrites,
-    };
+      output: "standalone",
+    }
   };
   

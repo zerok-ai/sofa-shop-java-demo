@@ -1,11 +1,12 @@
 FROM --platform=linux/amd64 node:18
 WORKDIR /app
-COPY . .
+
+COPY ./public ./public
+COPY ./package.json ./package.json
+COPY ./.next/standalone ./
+COPY ./.next/static ./.next/static
 
 # RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 # RUN npm update
-RUN npm install --legacy-peer-deps
-
-RUN npm run build
-CMD ["npm", "run", "start"]
+CMD ["node", "server.js"]
 EXPOSE 80

@@ -19,6 +19,7 @@ Ecommerce.getInitialProps = async () => {
       categories,
     }
   } catch (err) {
+    console.log({ err })
     const categories = await fetchStaticCategories()
     return {
       categories,

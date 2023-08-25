@@ -113,6 +113,7 @@ export async function getServerSideProps() {
   try {
     const rdata = await fetchInventory()
     const inventory = rdata.data
+    console.log({ inventory }, rdata)
     const inventoryCategorized = inventory.reduce((acc, next) => {
       const categories = next.categories
       categories.forEach((c) => {
