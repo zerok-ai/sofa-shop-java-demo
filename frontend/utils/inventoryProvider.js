@@ -21,7 +21,11 @@ type Product {
 
 async function fetchInventory() {
   // const inventory = API.get(apiUrl)
-  return await raxios.get(LIST_INVENTORY_ENDPOINT)
+  try {
+    return await raxios.get(LIST_INVENTORY_ENDPOINT)
+  } catch (err) {
+    return await axios.get("http://localhost:3000/data/inventory.json")
+  }
 }
 
 
