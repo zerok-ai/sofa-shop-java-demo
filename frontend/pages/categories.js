@@ -5,10 +5,54 @@ import CartLink from '../components/CartLink'
 import { fetchInventory } from '../utils/inventoryProvider'
 import { getProducts } from '../services/dataservice'
 import { STATIC_INVENTORY } from "../utils/staticInventory"
+import { Fragment, useEffect, useState } from "react"
+import PageHeader from "../components/PageHeader"
 
-function Categories({ categories = [] }) {
-  if (!categories.length) {
-    return null
+function Categories() {
+  const [categories, setCategories] = useState([])
+  const [error, setError] = useState(false)
+  useEffect(() => {
+    const fetchData = async () => {
+      setError(false)
+      try {
+        const rdata = await fetchInventory()
+        const inventory = rdata.data
+        const inventoryCategorized = inventory.reduce((acc, next) => {
+          const categories = next.categories
+          categories.forEach((c) => {
+            const index = acc.findIndex((item) => item.name === c)
+            if (index !== -1) {
+              const item = acc[index]
+              item.itemCount = item.itemCount + 1
+              acc[index] = item
+            } else {
+              const item = {
+                name: c,
+                image: next.image,
+                itemCount: 1,
+              }
+              acc.push(item)
+            }
+          })
+          return acc
+        }, [])
+        setCategories(inventoryCategorized)
+      } catch (err) {
+        console.log({ err })
+        setError(true)
+      }
+    }
+    fetchData()
+  }, [])
+  if (!categories.length || error) {
+    return (
+      <Fragment>
+        <PageHeader />
+        <h6 className="mb-3" style={{ height: "80vh" }}>
+          {error && "Could not fetch categories."}
+        </h6>
+      </Fragment>
+    )
   }
   return (
     <>
@@ -55,48 +99,5 @@ function Categories({ categories = [] }) {
   )
 }
 
-export async function getServerSideProps() {
-  // const inventory = await getProducts();
-  let inventory
-  try {
-    rdata = await fetchInventory()
-    inventory = rdata.data
-  } catch {
-    inventory = STATIC_INVENTORY
-  }
-  try {
-    const inventoryCategories = inventory.reduce((acc, next) => {
-      const categories = next.categories
-      categories.forEach((c) => {
-        const index = acc.findIndex((item) => item.name === c)
-        if (index !== -1) {
-          const item = acc[index]
-          item.itemCount = item.itemCount + 1
-          acc[index] = item
-        } else {
-          const item = {
-            name: c,
-            image: next.image,
-            itemCount: 1,
-          }
-          acc.push(item)
-        }
-      })
-      return acc
-    }, [])
-
-    return {
-      props: {
-        categories: inventoryCategories,
-      },
-    }
-  } catch (err) {
-    return {
-      props: {
-        categories: [],
-      },
-    }
-  }
-}
 
 export default Categories

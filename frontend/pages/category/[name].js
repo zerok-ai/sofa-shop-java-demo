@@ -4,21 +4,48 @@ import { titleIfy, slugify } from '../../utils/helpers'
 import fetchCategories from '../../utils/categoryProvider'
 import inventoryForCategory from '../../utils/inventoryForCategory'
 import CartLink from '../../components/CartLink'
-import { Fragment } from "react"
+import { Fragment, useEffect, useState } from "react"
 import PageHeader from "../../components/PageHeader"
+import { useRouter } from "next/router"
 
 const Category = (props) => {
-  const { inventory, title } = props
-  if (!inventory.length) {
+  const router = useRouter()
+
+  const [inventory, setInventory] = useState([])
+  const [error, setError] = useState(false)
+  const { name } = router.query
+  const title = name ? name.replace(/-/g, " ") : ""
+  useEffect(() => {
+    if (router.isReady && title) {
+      setInventory([])
+      try {
+        setError(false)
+        const fetchData = async () => {
+          setError(false)
+          const inventory = await inventoryForCategory(title)
+          setInventory(inventory)
+        }
+        fetchData()
+      } catch (err) {
+        console.log({ err })
+        setError(true)
+      }
+    }
+  }, [router, title])
+  if (!inventory.length || error) {
     return (
       <Fragment>
         <PageHeader />
+        <div className="pt-4 sm:pt-10 pb-8">
+          <h1 className="text-5xl font-light">{titleIfy(title)}</h1>
+        </div>
         <h6 className="mb-3" style={{ height: "60vh" }}>
-          Could not fetch category.
+          {error && "Could not fetch category."}
         </h6>
       </Fragment>
     )
   }
+
   return (
     <>
       <CartLink />
@@ -58,25 +85,5 @@ const Category = (props) => {
   )
 }
 
-export async function getServerSideProps({ params }) {
-  try {
-    const category = params.name.replace(/-/g, " ")
-    const inventory = await inventoryForCategory(category)
-    return {
-      props: {
-        inventory,
-        title: category,
-      },
-    }
-  } catch {
-    const category = params.name.replace(/-/g, " ")
-    return {
-      props: {
-        inventory: [],
-        title: category,
-      },
-    }
-  }
-}
 
 export default Category

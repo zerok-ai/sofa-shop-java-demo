@@ -2,17 +2,53 @@ import Head from 'next/head'
 import { Center, Footer, Tag, Showcase, DisplaySmall, DisplayMedium } from '../components'
 import { titleIfy, slugify } from '../utils/helpers'
 import { fetchInventory } from '../utils/inventoryProvider'
-import { Fragment } from "react"
+import { Fragment, useEffect, useState } from "react"
 import PageHeader from "../components/PageHeader"
 
-const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
-  if (!inventoryData.length) {
-    console.log("api error")
+const Home = () => {
+  const [inventoryData, setInventoryData] = useState([])
+  const [categoryData, setCategoryData] = useState([])
+  const [error, setError] = useState(false)
+  useEffect(() => {
+    const fetchData = async () => {
+      setError(false)
+      try {
+        const rdata = await fetchInventory()
+        const inventory = rdata.data
+        const inventoryCategorized = inventory.reduce((acc, next) => {
+          const categories = next.categories
+          categories.forEach((c) => {
+            const index = acc.findIndex((item) => item.name === c)
+            if (index !== -1) {
+              const item = acc[index]
+              item.itemCount = item.itemCount + 1
+              acc[index] = item
+            } else {
+              const item = {
+                name: c,
+                image: next.image,
+                itemCount: 1,
+              }
+              acc.push(item)
+            }
+          })
+          return acc
+        }, [])
+        setInventoryData(inventory)
+        setCategoryData(inventoryCategorized)
+      } catch (err) {
+        console.log({ err })
+        setError(true)
+      }
+    }
+    fetchData()
+  }, [])
+  if (!inventoryData.length || !categoryData.length || error) {
     return (
       <Fragment>
         <PageHeader />
         <h6 className="mb-3" style={{ height: "60vh" }}>
-          Could not fetch inventory.
+          {error && "Could not fetch inventory."}
         </h6>
       </Fragment>
     )
@@ -106,49 +142,6 @@ const Home = ({ inventoryData = [], categories: categoryData = [] }) => {
       </div>
     </>
   )
-}
-
-export async function getServerSideProps() {
-  // const inventory = await getProducts()
-  try {
-    const rdata = await fetchInventory()
-    const inventory = rdata.data
-    console.log({ inventory }, rdata)
-    const inventoryCategorized = inventory.reduce((acc, next) => {
-      const categories = next.categories
-      categories.forEach((c) => {
-        const index = acc.findIndex((item) => item.name === c)
-        if (index !== -1) {
-          const item = acc[index]
-          item.itemCount = item.itemCount + 1
-          acc[index] = item
-        } else {
-          const item = {
-            name: c,
-            image: next.image,
-            itemCount: 1,
-          }
-          acc.push(item)
-        }
-      })
-      return acc
-    }, [])
-
-    return {
-      props: {
-        inventoryData: inventory,
-        categories: inventoryCategorized,
-      },
-    }
-  } catch (err) {
-    console.log({ err })
-    return {
-      props: {
-        inventoryData: [],
-        categories: [],
-      },
-    }
-  }
 }
 
 export default Home
