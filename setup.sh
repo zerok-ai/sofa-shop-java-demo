@@ -156,13 +156,27 @@ then
     gcp_dns_project=black-scope-358204
     domain=$EXTERNAL_HOSTNAME
     extip=$ips
+    isIP=`echo "$extip" | awk '/^([0-9]{1,3}[.]){3}([0-9]{1,3})$/{print $1}'`
 
-    domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="anton" --type="A" --format=yaml`
+    if [ -z $isIP ]; then
+        echo "Updating CNAME record for $domain to $extip"
+        domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="anton" --type="CNAME" --format=yaml`
 
-    if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
-       gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
+        if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
+        gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=anton --type="CNAME" --rrdatas="$extip." --ttl=10
+        else
+        gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=anton --type="CNAME" --rrdatas="$extip." --ttl=10
+        fi
     else
-       gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
+        echo "Updating A record for $domain to $extip"
+        domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="anton" --type="A" --format=yaml`
+
+        if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
+        gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
+        else
+        gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
+        fi
+
     fi
 
 elif [[ "$COMMAND" == "$DELETE_COMMAND"  ]]
