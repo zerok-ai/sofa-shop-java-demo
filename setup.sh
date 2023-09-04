@@ -130,6 +130,8 @@ then
       kubectl create namespace "$NAMESPACE"
     fi
 
+    kubectl label --overwrite namespace $NAMESPACE zk-injection=enabled
+
     #Inventory Setup
     envsubst < ${scriptDir}/inventory/k8s/app-configmap_template.yaml > ${scriptDir}/inventory/k8s/app-configmap.yaml
     envsubst < ${scriptDir}/inventory/k8s/db-secrets_template.yaml > ${scriptDir}/inventory/k8s/db-secrets.yaml
