@@ -15,6 +15,7 @@ target/
 */.mvn/
 */mvnw
 */mvnw.cmd
+scripts/modified/*
 app-configmap.yaml
 ingress.yaml
 managedCertificate.yaml

@@ -4,10 +4,12 @@
 #     ./setup.sh [apply|delete]
 #  install/removes the deployment in specified Namespace.
 ### 
-scriptDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
-source $scriptDir/variables.sh
+thisDir=$(dirname -- "$(readlink -f -- "$BASH_SOURCE")")
+SCRIPTS_DIR=$thisDir/scripts
+source $SCRIPTS_DIR/variables.sh
 
 COMMAND=$APPLY_COMMAND
+SSL_SETUP=0
 
 show_help() {
   echo "Usage: ./setup.sh [options]"
@@ -16,6 +18,7 @@ show_help() {
   echo "  -c <command>: Specify the command (apply or delete). Default: $APPLY_COMMAND"
   echo "  -n <namespace>: Specify the namespace for the deployment. Default: $DEFAULT_NAMESPACE"
   echo "  -m <mode>: Specify the mode (postgres or mysql). Default: $MODE_MYSQL"
+  echo "  -s <ssl>: Is ssl needs to be setup (postgres or mysql) or not Default: 0 (false)"
   echo "  -h: Show this help message."
   echo ""
   echo "For more information on how default values are calculated, refer to the README.md file"
@@ -23,7 +26,7 @@ show_help() {
   exit 0
 }
 
-while getopts "e:c:n:m:h" opt; do
+while getopts "e:c:n:m:h:s" opt; do
   case $opt in
     e)
       EXTERNAL_HOSTNAME="${OPTARG:-$DEFAULT_EXTERNAL_HOSTNAME}"
@@ -36,6 +39,9 @@ while getopts "e:c:n:m:h" opt; do
       ;;
     n)
       NAMESPACE="${OPTARG:-$DEFAULT_NAMESPACE-$MODE}"
+      ;;
+    s)
+      SSL_SETUP="${OPTARG:-0}"
       ;;
     h)
       show_help
@@ -61,7 +67,8 @@ fi
 if [[ -z "$EXTERNAL_HOSTNAME" ]]; then
   echo "Here MODE=$MODE"
   CLUSTER_NAME=$(kubectl config current-context | awk -F '_' '{print $4}')
-  EXTERNAL_HOSTNAME="sofa-shop.$MODE.$CLUSTER_NAME.getanton.com"
+  export CLUSTER_DOMAIN="$CLUSTER_NAME.$DOMAIN"
+  EXTERNAL_HOSTNAME="sofa-shop.$MODE.$CLUSTER_DOMAIN"
 fi
 
 export EXTERNAL_HOSTNAME=$EXTERNAL_HOSTNAME
@@ -104,7 +111,7 @@ fi
 
 
 echo "DEFAULT_EXTERNAL_HOSTNAME=$DEFAULT_EXTERNAL_HOSTNAME"
-echo "scriptDir=$scriptDir"
+echo "thisDir=$thisDir"
 echo "EXTERNAL_HOSTNAME=$EXTERNAL_HOSTNAME"
 echo "COMMAND=$COMMAND"
 echo "NAMESPACE=$NAMESPACE"
@@ -120,6 +127,16 @@ echo "DB_USERNAME: $DB_USERNAME"
 echo "DB_PASSWORD: $DB_PASSWORD"
 echo "DB_URL_PARAMS: $DB_URL_PARAMS"
 
+#########
+kubectl create namespace $NAMESPACE
+$SCRIPTS_DIR/setup-dns.sh
+
+if [[ "$SSL_SETUP" == "1" ]]; then
+  $SCRIPTS_DIR/setup-cert-manager.sh
+  $SCRIPTS_DIR/setup-secrets.sh
+fi
+
+
 if [[ "$COMMAND" == "$APPLY_COMMAND" ]]
 then
     # Check if the namespace exists
@@ -133,53 +150,53 @@ then
     kubectl label --overwrite namespace $NAMESPACE zk-injection=enabled
 
     #Inventory Setup
-    envsubst < ${scriptDir}/inventory/k8s/app-configmap_template.yaml > ${scriptDir}/inventory/k8s/app-configmap.yaml
-    envsubst < ${scriptDir}/inventory/k8s/db-secrets_template.yaml > ${scriptDir}/inventory/k8s/db-secrets.yaml
+    envsubst < ${thisDir}/inventory/k8s/app-configmap_template.yaml > ${thisDir}/inventory/k8s/app-configmap.yaml
+    envsubst < ${thisDir}/inventory/k8s/db-secrets_template.yaml > ${thisDir}/inventory/k8s/db-secrets.yaml
 
     #Order Setup
-    envsubst < ${scriptDir}/order/k8s/app-configmap_template.yaml > ${scriptDir}/order/k8s/app-configmap.yaml
-    envsubst < ${scriptDir}/order/k8s/db-secrets_template.yaml > ${scriptDir}/order/k8s/db-secrets.yaml
+    envsubst < ${thisDir}/order/k8s/app-configmap_template.yaml > ${thisDir}/order/k8s/app-configmap.yaml
+    envsubst < ${thisDir}/order/k8s/db-secrets_template.yaml > ${thisDir}/order/k8s/db-secrets.yaml
 
     #Product Setup
-    envsubst < ${scriptDir}/product/k8s/app-configmap_template.yaml > ${scriptDir}/product/k8s/app-configmap.yaml
-    envsubst < ${scriptDir}/product/k8s/db-secrets_template.yaml > ${scriptDir}/product/k8s/db-secrets.yaml
+    envsubst < ${thisDir}/product/k8s/app-configmap_template.yaml > ${thisDir}/product/k8s/app-configmap.yaml
+    envsubst < ${thisDir}/product/k8s/db-secrets_template.yaml > ${thisDir}/product/k8s/db-secrets.yaml
 
     #Loadrun
-    envsubst < ${scriptDir}/k8s/external/loadrun-deployment_template.yaml > ${scriptDir}/k8s/external/loadrun-deployment.yaml
+    envsubst < ${thisDir}/k8s/external/loadrun-deployment_template.yaml > ${thisDir}/k8s/external/loadrun-deployment.yaml
 
     #k8s
-    envsubst < ${scriptDir}/k8s/ingress-template.yaml > ${scriptDir}/k8s/ingress.yaml
-    envsubst < ${scriptDir}/k8s/managedCertificate-template.yaml > ${scriptDir}/k8s/managedCertificate.yaml
+    envsubst < ${thisDir}/k8s/ingress-template.yaml > ${thisDir}/k8s/ingress.yaml
+    envsubst < ${thisDir}/k8s/managedCertificate-template.yaml > ${thisDir}/k8s/managedCertificate.yaml
 
-    kubectl $COMMAND -n $NAMESPACE -k ${scriptDir}/
-    kubectl $COMMAND -k ${scriptDir}/k8s/external/
-
-    ips=($(kubectl get services -n ingress-nginx --no-headers --field-selector metadata.name=ingress-nginx-controller | awk '{print $4}'))
-    gcp_dns_project=black-scope-358204
-    domain=$EXTERNAL_HOSTNAME
-    extip=$ips
-    isIP=`echo "$extip" | awk '/^([0-9]{1,3}[.]){3}([0-9]{1,3})$/{print $1}'`
-
-    if [ -z $isIP ]; then
-        echo "Updating CNAME record for $domain to $extip"
-        domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="anton" --type="CNAME" --format=yaml`
-
-        if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
-        gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=anton --type="CNAME" --rrdatas="$extip." --ttl=10
-        else
-        gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=anton --type="CNAME" --rrdatas="$extip." --ttl=10
-        fi
-    else
-        echo "Updating A record for $domain to $extip"
-        domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="anton" --type="A" --format=yaml`
-
-        if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
-        gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
-        else
-        gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=anton --type=A --rrdatas=$extip --ttl=10
-        fi
-
-    fi
+    kubectl $COMMAND -n $NAMESPACE -k ${thisDir}/
+    kubectl $COMMAND -k ${thisDir}/k8s/external/
+#
+#    ips=($(kubectl get services -n ingress-nginx --no-headers --field-selector metadata.name=ingress-nginx-controller | awk '{print $4}'))
+#    gcp_dns_project=black-scope-358204
+#    domain=$EXTERNAL_HOSTNAME
+#    extip=$ips
+#    isIP=`echo "$extip" | awk '/^([0-9]{1,3}[.]){3}([0-9]{1,3})$/{print $1}'`
+#
+#    if [ -z $isIP ]; then
+#        echo "Updating CNAME record for $domain to $extip"
+#        domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="zerok-dev" --type="CNAME" --format=yaml`
+#
+#        if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
+#        gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=zerok-dev --type="CNAME" --rrdatas="$extip." --ttl=10
+#        else
+#        gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=zerok-dev --type="CNAME" --rrdatas="$extip." --ttl=10
+#        fi
+#    else
+#        echo "Updating A record for $domain to $extip"
+#        domain_exists=`gcloud dns --project="${gcp_dns_project}" record-sets list --name "${domain}" --zone="zerok-dev" --type="A" --format=yaml`
+#
+#        if [ -z "$domain_exists" ] || [ "$domain_exists" == "" ]; then
+#        gcloud dns --project=$gcp_dns_project record-sets create $domain --zone=zerok-dev --type=A --rrdatas=$extip --ttl=10
+#        else
+#        gcloud dns --project=$gcp_dns_project record-sets update $domain --zone=zerok-dev --type=A --rrdatas=$extip --ttl=10
+#        fi
+#
+#    fi
 
 elif [[ "$COMMAND" == "$DELETE_COMMAND"  ]]
 then

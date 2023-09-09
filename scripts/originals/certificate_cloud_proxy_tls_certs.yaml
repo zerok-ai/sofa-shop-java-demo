@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cloud-proxy-tls-certs
+  namespace: ${NAMESPACE}
+spec:
+  dnsNames:
+  - ${CLUSTER_DOMAIN}
+  - sofa-shop.${MODE}.${CLUSTER_DOMAIN}
+  secretName: cloud-proxy-tls-certs
+  issuerRef:
+    name: letsencrypt-cluster-issuer
+    kind: ClusterIssuer
