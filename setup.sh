@@ -9,7 +9,7 @@ SCRIPTS_DIR=$thisDir/scripts
 source $SCRIPTS_DIR/variables.sh
 
 COMMAND=$APPLY_COMMAND
-SSL_SETUP=0
+SSL_SETUP=1
 
 show_help() {
   echo "Usage: ./setup.sh [options]"
@@ -131,11 +131,11 @@ echo "DB_URL_PARAMS: $DB_URL_PARAMS"
 kubectl create namespace $NAMESPACE
 $SCRIPTS_DIR/setup-dns.sh
 
-#if [[ "$SSL_SETUP" == "1" ]]; then
 echo "SSL_SETUP=$SSL_SETUP"
+if [[ "$SSL_SETUP" == "1" ]]; then
   $SCRIPTS_DIR/setup-cert-manager.sh
   $SCRIPTS_DIR/setup-secrets.sh
-#fi
+fi
 
 
 if [[ "$COMMAND" == "$APPLY_COMMAND" ]]
