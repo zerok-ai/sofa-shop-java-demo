@@ -58,7 +58,7 @@ const Cart = ({ context }) => {
                   {
                     cart.map((item) => {
                       return (
-                        <div className="border-b py-10" key={item.skuId}>
+                        <div className="border-b py-10" key={item.sku}>
                           <div className="flex items-center hidden md:flex">
                             <Link href={`/product/${slugify(item.name)}`}>
                               <a aria-label={item.name}>
