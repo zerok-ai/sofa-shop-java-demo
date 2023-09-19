@@ -131,10 +131,11 @@ echo "DB_URL_PARAMS: $DB_URL_PARAMS"
 kubectl create namespace $NAMESPACE
 $SCRIPTS_DIR/setup-dns.sh
 
-if [[ "$SSL_SETUP" == "1" ]]; then
+#if [[ "$SSL_SETUP" == "1" ]]; then
+echo "SSL_SETUP=$SSL_SETUP"
   $SCRIPTS_DIR/setup-cert-manager.sh
   $SCRIPTS_DIR/setup-secrets.sh
-fi
+#fi
 
 
 if [[ "$COMMAND" == "$APPLY_COMMAND" ]]
