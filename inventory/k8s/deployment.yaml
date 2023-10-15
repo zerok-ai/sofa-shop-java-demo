@@ -16,6 +16,8 @@ spec:
         app: inventory
         group: zerok-demoapp
     spec:
+      nodeSelector:
+       beta.kubernetes.io/arch: amd64
       containers:
         - name: inventory
           image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/inventory:configurable

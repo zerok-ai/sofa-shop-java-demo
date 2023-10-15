@@ -14,6 +14,8 @@ spec:
       labels:
         app: product
     spec:
+      nodeSelector:
+       beta.kubernetes.io/arch: amd64
       containers:
         - name: product
           image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/product:configurable

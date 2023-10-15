@@ -14,6 +14,8 @@ spec:
       labels:
         app: demo-shop
     spec:
+      nodeSelector:
+       beta.kubernetes.io/arch: amd64
       containers:
       - name: demo-shop-app
         image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/frontend:0.0.1
