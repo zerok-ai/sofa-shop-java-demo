@@ -1,27 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: product
+  name: inventory
+  namespace: sofa-shop-mysql
   labels:
-    app: product
+    app: inventory
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: product
+      app: inventory
+      group: zerok-demoapp
   template:
     metadata:
       labels:
-        app: product
+        app: inventory
+        group: zerok-demoapp
       annotations:
         instrumentation.opentelemetry.io/inject-java: monitoring/sofa-shop-instrumentation-java
     spec:
       nodeSelector:
        beta.kubernetes.io/arch: amd64
       containers:
-        - name: product
-          image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/product:configurable
+        - name: inventory
+          image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/inventory:configurable
           imagePullPolicy: Always
+#          readinessProbe:
+#            httpGet:
+#              path: /actuator/health
+#              port: 8080
+#            initialDelaySeconds: 0
+#            periodSeconds: 1
+          resources:
+            limits:
+              cpu: "0.3"
+              memory: "1512Mi"
+            requests:
+              cpu: "0.2"
+              memory: "1000Mi"
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables
@@ -58,29 +74,30 @@ spec:
             - name: DB_HOST   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: product-app-configmap
+                  name: inventory-app-configmap
                   key: host
 
-            - name: DB_NAME  # Setting PRODUCT Database name from configMap
+            - name: DB_NAME  # Setting INVENTORY Database name from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: product-app-configmap
+                  name: inventory-app-configmap
                   key: dbName
 
-            - name: AVAILABILITY_HOST  # Setting AVAILABILITY service url from configMap
+            - name: PRODUCT_HOST  # Setting PRODUCT service url from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: product-app-configmap
-                  key: availabilityServiceURL
+                  name: inventory-app-configmap
+                  key: productServiceURL
 
             - name: DB_USERNAME  # Setting Database username from Secret
               valueFrom:
                 secretKeyRef:
-                  name: product-db-secrets
+                  name: inventory-db-secrets
                   key: username
 
             - name: DB_PASSWORD # Setting Database password from Secret
               valueFrom:
                 secretKeyRef:
-                  name: product-db-secrets
+                  name: inventory-db-secrets
                   key: password
+

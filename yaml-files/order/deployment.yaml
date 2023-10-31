@@ -1,26 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: product
+  name: order
+  namespace: sofa-shop-mysql
   labels:
-    app: product
+    app: order
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: product
+      app: order
   template:
     metadata:
       labels:
-        app: product
+        app: order
       annotations:
         instrumentation.opentelemetry.io/inject-java: monitoring/sofa-shop-instrumentation-java
     spec:
       nodeSelector:
        beta.kubernetes.io/arch: amd64
       containers:
-        - name: product
-          image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/product:configurable
+        - name: order
+          image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/order:configurable
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -28,59 +29,66 @@ spec:
             - name: DB_URL_PARAMS   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: inventory-app-configmap
+                  name: order-app-configmap
                   key: db_url_params
 
             - name: DB_DRIVER_TYPE   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: inventory-app-configmap
+                  name: order-app-configmap
                   key: db_driver_type
 
             - name: DB_HIBERNATE_DIALECT   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: inventory-app-configmap
+                  name: order-app-configmap
                   key: db_hibernate_dialect
 
             - name: DB_PRINT_SQL   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: inventory-app-configmap
+                  name: order-app-configmap
                   key: db_print_sql
 
             - name: DB_DRIVER_CLASS   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: inventory-app-configmap
+                  name: order-app-configmap
                   key: db_driver_class
-
+                  
             - name: DB_HOST   # Setting Database host address from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: product-app-configmap
+                  name: order-app-configmap
                   key: host
 
             - name: DB_NAME  # Setting PRODUCT Database name from configMap
               valueFrom:
                 configMapKeyRef:
-                  name: product-app-configmap
+                  name: order-app-configmap
                   key: dbName
-
-            - name: AVAILABILITY_HOST  # Setting AVAILABILITY service url from configMap
-              valueFrom:
-                configMapKeyRef:
-                  name: product-app-configmap
-                  key: availabilityServiceURL
 
             - name: DB_USERNAME  # Setting Database username from Secret
               valueFrom:
                 secretKeyRef:
-                  name: product-db-secrets
+                  name: order-db-secrets
                   key: username
 
             - name: DB_PASSWORD # Setting Database password from Secret
               valueFrom:
                 secretKeyRef:
-                  name: product-db-secrets
+                  name: order-db-secrets
                   key: password
+
+            - name: PRODUCT_HOST  # Setting PRODUCT service url from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: order-app-configmap
+                  key: productServiceURL
+
+            - name: INVENTORY_HOST  # Setting INVENTORY service url from configMap
+              valueFrom:
+                configMapKeyRef:
+                  name: order-app-configmap
+                  key: inventoryServiceURL
+
