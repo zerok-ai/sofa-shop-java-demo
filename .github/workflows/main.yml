@@ -21,7 +21,7 @@ on:
       GKE_CLUSTER:
         description: 'Cluster Name'
         required: true
-        default: 'pxclient01'
+        default: 'loadclient03'
       APP_NAME:
         type: choice
         required: true

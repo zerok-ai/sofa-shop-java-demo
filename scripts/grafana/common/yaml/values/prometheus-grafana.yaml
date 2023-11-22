@@ -8,13 +8,11 @@ prometheus:
     serviceMonitorNamespaceSelector: {}
     enableRemoteWriteReceiver: true
     nodeSelector: {
-      role: system
     }
 
 alertmanager:
   alertmanagerSpec: 
     nodeSelector: {
-      role: system
     }
 
 grafana:
@@ -31,10 +29,8 @@ grafana:
 prometheusOperator:
   alertmanagerSpec: 
     nodeSelector: {
-      role: system
     }
   admissionWebhooks: 
     patch:
       nodeSelector: {
-        role: system
       }

@@ -9,11 +9,11 @@ kubectl delete configmap ${dashboardName} --namespace monitoring
 
 kubectl create configmap ${dashboardName} \
     --namespace monitoring \
-	--from-file $setupfolder/../grafana/${dashboardName}.json \
+	--from-file $setupfolder/../../grafana/${dashboardName}.json \
     -o yaml --dry-run=client | kubectl apply -f -
 
 kubectl label --overwrite --namespace monitoring configmap \
     ${dashboardName} \
     grafana_dashboard="1"
 
-#perl -pi -e "s/pxclient01/pxclient01/" $setupfolder/../grafana/${dashboardName}.json
+#perl -pi -e "s/loadclient03/loadclient03/" $setupfolder/../grafana/${dashboardName}.json

@@ -5,7 +5,7 @@ metadata:
   labels:
     app: product
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: product
@@ -20,6 +20,13 @@ spec:
         - name: product
           image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/product:configurable
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "2"
+              memory: "1512Mi"
+            requests:
+              cpu: "1"
+              memory: "1000Mi"
           ports:
             - containerPort: 8080
           env: # Setting Enviornmental Variables

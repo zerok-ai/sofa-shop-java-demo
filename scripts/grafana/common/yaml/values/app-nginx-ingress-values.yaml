@@ -1,7 +1,6 @@
 controller:
   replicaCount: 1
   nodeSelector: {
-    role: system,
     kubernetes.io/os: linux
   }
   metrics:
@@ -13,7 +12,6 @@ controller:
       }
 defaultBackend:
   nodeSelector: {
-    role: system,
     kubernetes.io/os: linux
   }
   
