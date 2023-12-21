@@ -2566,7 +2566,7 @@
         "name": "sofa_shop_inventory_traffic",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "1m_100-14m_100",
             "value": "1m_100-14m_100"
           }
@@ -2605,7 +2605,7 @@
         "name": "concurrencies",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "180_198_207_204_205_207",
             "value": "180_198_207_204_205_207"
           }
@@ -2625,7 +2625,7 @@
         "name": "qos_app_traffic",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "1m_800-2m_1000-2m_1100",
             "value": "1m_800-2m_1000-2m_1100"
           }
@@ -2645,7 +2645,7 @@
         "name": "qos_zk_traffic",
         "options": [
           {
-            "selected": false,
+            "selected": true,
             "text": "1m_800-2m_1000_7:3-2m_1100_7:3",
             "value": "1m_800-2m_1000_7:3-2m_1100_7:3"
           }
@@ -2664,7 +2664,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "k6.loadclient03.getanton.com",
           "value": "k6.loadclient03.getanton.com"
         },
@@ -2705,8 +2705,8 @@
       {
         "current": {
           "selected": true,
-          "text": "1m_50000-1m_50000-18m_50000",
-          "value": "1m_50000-1m_50000-18m_50000"
+          "text": "1m_10000-1m_50000-8m_50000",
+          "value": "1m_10000-1m_50000-8m_50000"
         },
         "hide": 0,
         "label": "Order Traffic",
@@ -2714,19 +2714,19 @@
         "options": [
           {
             "selected": true,
-            "text": "1m_50000-1m_50000-18m_50000",
-            "value": "1m_50000-1m_50000-18m_50000"
+            "text": "1m_10000-1m_50000-8m_50000",
+            "value": "1m_10000-1m_50000-8m_50000"
           }
         ],
-        "query": "1m_50000-1m_50000-18m_50000",
+        "query": "1m_10000-1m_50000-8m_50000",
         "skipUrlSync": false,
         "type": "textbox"
       },
       {
         "current": {
-          "selected": true,
-          "text": "500",
-          "value": "500"
+          "selected": false,
+          "text": "200",
+          "value": "200"
         },
         "hide": 0,
         "label": "Initial VUs",
@@ -2734,19 +2734,19 @@
         "options": [
           {
             "selected": true,
-            "text": "500",
-            "value": "500"
+            "text": "2000",
+            "value": "2000"
           }
         ],
-        "query": "500",
+        "query": "200",
         "skipUrlSync": false,
         "type": "textbox"
       },
       {
         "current": {
-          "selected": true,
-          "text": "500",
-          "value": "500"
+          "selected": false,
+          "text": "200",
+          "value": "200"
         },
         "hide": 0,
         "label": "Max VUs",
@@ -2754,18 +2754,18 @@
         "options": [
           {
             "selected": true,
-            "text": "500",
-            "value": "500"
+            "text": "2000",
+            "value": "2000"
           }
         ],
-        "query": "500",
+        "query": "200",
         "skipUrlSync": false,
         "type": "textbox"
       }
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-1m",
     "to": "now"
   },
   "timepicker": {
@@ -2785,6 +2785,6 @@
   "timezone": "",
   "title": "Sofa Shop Demo",
   "uid": "vN-hlAjnk",
-  "version": 16,
+  "version": 2,
   "weekStart": ""
 }

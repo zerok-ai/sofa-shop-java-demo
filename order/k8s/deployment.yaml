@@ -16,6 +16,7 @@ spec:
     spec:
       nodeSelector:
        beta.kubernetes.io/arch: amd64
+#       beta.kubernetes.io/instance-type: e2-standard-16
       containers:
         - name: order
           image: us-west1-docker.pkg.dev/zerok-dev/sofa-shop/order:configurable

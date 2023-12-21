@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: prom.loadclient03.getanton.com
+  - host: prom.loadclient02.getanton.com
     http:
       paths:
       - backend:

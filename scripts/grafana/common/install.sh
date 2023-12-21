@@ -11,4 +11,4 @@ sh $setupfolder/common/install-prometheus-and-grafana.sh
 # sh $setupfolder/common/install-ingress-controller.sh
 
 # install istio
-sh $setupfolder/common/install-istio.sh
+#sh $setupfolder/common/install-istio.sh

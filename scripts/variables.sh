@@ -5,8 +5,8 @@ export SETUP_CLUSTERISSUER_WAIT_TIME=25
 export SETUP_CERT_MANAGER_WAIT_TIME=25
 
 if [[ -z $DNS_ZONE ]]; then
-    export DNS_ZONE=zerok-dev
-    # export DNS_ZONE=anton
+#    export DNS_ZONE=zerok-dev
+     export DNS_ZONE=anton
 fi
 
 if [ "$DNS_ZONE" == "zerok-dev" ]
