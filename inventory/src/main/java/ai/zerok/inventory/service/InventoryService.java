@@ -3,6 +3,7 @@ package ai.zerok.inventory.service;
 import ai.zerok.inventory.model.*;
 import ai.zerok.inventory.repository.InventoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -39,6 +40,7 @@ public class InventoryService {
     }
 
 
+    @Timed(value = "inventory.all", description = "Time taken to return greeting")
     public List<InventoryDetailsResponse> getAll() {
         List<Inventory> inventoryList = inventoryRepository.findAll();
         Map<String, Inventory> skuToQuantityMap = new HashMap<>();
