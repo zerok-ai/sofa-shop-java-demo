@@ -2,7 +2,7 @@ LOCATION="us-west1"
 PROJECT_ID="zerok-dev"
 REPOSITORY="sofa-shop"
 IMAGE="inventory"
-TAG="configurable"
+TAG="test-api"
 ART_Repo_URI="$LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$TAG"
 
 docker build -t $IMAGE .

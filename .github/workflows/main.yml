@@ -21,7 +21,7 @@ on:
       GKE_CLUSTER:
         description: 'Cluster Name'
         required: true
-        default: 'loadclient02'
+        default: 'sandbix01'
       APP_NAME:
         type: choice
         required: true

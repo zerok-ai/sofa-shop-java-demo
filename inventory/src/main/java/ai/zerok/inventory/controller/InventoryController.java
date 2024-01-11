@@ -17,6 +17,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -35,6 +36,20 @@ public class InventoryController {
     @ResponseStatus(HttpStatus.OK)
     public boolean isInStock(@RequestParam("skuCode") String skuCode, @RequestParam("quantity") String quantity){
         return inventoryService.isInStock(skuCode, quantity);
+    }
+
+    @GetMapping("/status/{statusCode}")
+    public void getAllInventory(@PathVariable int statusCode){
+        // Validate the statusCode (optional)
+        if (statusCode >= 100 && statusCode <= 599) {
+            // Set the HTTP status based on the path variable
+            System.out.println("/status API with status=" + statusCode);
+            throw new ResponseStatusException(HttpStatus.valueOf(statusCode), "Custom status code");
+        } else {
+            // Handle invalid status code
+            System.out.println("/status API without status, throwing bad request (400)");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid status code");
+        }
     }
 
     @GetMapping("/all")

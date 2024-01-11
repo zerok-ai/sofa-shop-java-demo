@@ -3405,8 +3405,8 @@
       {
         "current": {
           "selected": false,
-          "text": "k6.loadclient02.getanton.com",
-          "value": "k6.loadclient02.getanton.com"
+          "text": "k6.sandbix01.getanton.com",
+          "value": "k6.sandbix01.getanton.com"
         },
         "hide": 0,
         "label": "k6-url",
@@ -3414,11 +3414,11 @@
         "options": [
           {
             "selected": true,
-            "text": "k6.loadclient02.getanton.com",
-            "value": "k6.loadclient02.getanton.com"
+            "text": "k6.sandbix01.getanton.com",
+            "value": "k6.sandbix01.getanton.com"
           }
         ],
-        "query": "k6.loadclient02.getanton.com",
+        "query": "k6.sandbix01.getanton.com",
         "skipUrlSync": false,
         "type": "textbox"
       },

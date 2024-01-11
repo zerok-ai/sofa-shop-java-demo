@@ -35,7 +35,7 @@ spec:
         args: [ "while true; do sleep 30; curl -ss -w '\n%{http_code} ' http://inventory.sofa-shop.svc.cluster.local/api/inventory/all; done;" ]
         resources: 
           limits:
-            cpu: "2"
+            cpu: "0.5"
             memory: 1Gi
           requests:
             cpu: 10m
