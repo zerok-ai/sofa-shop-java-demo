@@ -140,6 +140,7 @@ public class InventoryService {
 
     }
 
+    @Timed(value = "inventory.updateQuantity", description = "Time taken to return greeting")
     public void updateQuantity(InventoryRequest request) {
         if (request.getCurrentInventory() == 0) {
             throw new IllegalArgumentException("quantity should be more than 0");
@@ -157,6 +158,7 @@ public class InventoryService {
     }
 
 
+    @Timed(value = "inventory.create", description = "Time taken to return greeting")
     public void createInventory(InventoryRequest request) {
         if (request.getCurrentInventory() == 0 || request.getSku() == null || request.getSku().trim().equals("")) {
             throw new IllegalArgumentException("quantity should be more than 0");
@@ -168,6 +170,7 @@ public class InventoryService {
         inventoryRepository.save(inventory);
     }
 
+    @Timed(value = "inventory.delete", description = "Time taken to return greeting")
     public void deleteInventory(String inventoryId) {
         Long id = Long.parseLong(inventoryId);
         if (inventoryRepository.existsById(id)) {
