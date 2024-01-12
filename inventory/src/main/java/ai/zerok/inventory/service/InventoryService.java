@@ -3,6 +3,7 @@ package ai.zerok.inventory.service;
 import ai.zerok.inventory.model.*;
 import ai.zerok.inventory.repository.InventoryRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -39,6 +40,7 @@ public class InventoryService {
     }
 
 
+    @Timed(value = "inventory.all", description = "Time taken to return greeting")
     public List<InventoryDetailsResponse> getAll() {
         List<Inventory> inventoryList = inventoryRepository.findAll();
         Map<String, Inventory> skuToQuantityMap = new HashMap<>();
@@ -138,6 +140,7 @@ public class InventoryService {
 
     }
 
+    @Timed(value = "inventory.updateQuantity", description = "Time taken to return greeting")
     public void updateQuantity(InventoryRequest request) {
         if (request.getCurrentInventory() == 0) {
             throw new IllegalArgumentException("quantity should be more than 0");
@@ -155,6 +158,7 @@ public class InventoryService {
     }
 
 
+    @Timed(value = "inventory.create", description = "Time taken to return greeting")
     public void createInventory(InventoryRequest request) {
         if (request.getCurrentInventory() == 0 || request.getSku() == null || request.getSku().trim().equals("")) {
             throw new IllegalArgumentException("quantity should be more than 0");
@@ -166,6 +170,7 @@ public class InventoryService {
         inventoryRepository.save(inventory);
     }
 
+    @Timed(value = "inventory.delete", description = "Time taken to return greeting")
     public void deleteInventory(String inventoryId) {
         Long id = Long.parseLong(inventoryId);
         if (inventoryRepository.existsById(id)) {

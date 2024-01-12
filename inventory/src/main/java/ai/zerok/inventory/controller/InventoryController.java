@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -38,6 +39,8 @@ public class InventoryController {
         return inventoryService.isInStock(skuCode, quantity);
     }
 
+
+    @Timed(value = "inventory.status", description = "Time taken to return greeting")
     @GetMapping("/status/{statusCode}")
     public void getAllInventory(@PathVariable int statusCode){
         // Validate the statusCode (optional)
@@ -117,6 +120,7 @@ public class InventoryController {
 
     }
 
+    @Timed(value = "inventory.exception", description = "Time taken to return greeting")
     @GetMapping("/exception")
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public void Exception(){
